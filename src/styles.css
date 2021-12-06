@@ -1,0 +1,184 @@
+:root {
+    --primary: #08143B;
+    --secondary: #3B3463;
+    --accent-primary: #E61C7F;
+    --accent-secondary: #DF06B4;
+    --text: #FFF;
+}
+
+html, body {
+    height: 100%;
+}
+
+* {
+    background: var(--primary);
+    font-family: "Open Sans", sans-serif;
+}
+
+main {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+h1 {
+    color: var(--text);
+    text-transform: uppercase;
+    font-size: 1.5rem;
+}
+
+.helmet-img {
+    width: 3rem;
+    height: auto;
+    object-fit: cover;
+    filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
+    -webkit-filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
+}
+
+.team-img {
+    width: 10rem;
+    height: auto;
+    object-fit: cover;
+    -webkit-filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
+    filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
+}
+
+.create-event-form {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+}
+
+.add-time-form {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.input-field, .select-field {
+    border: 2px solid var(--accent-primary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.input-field:focus-visible, .select-field:focus-visible {
+    outline: none;
+    border: 2px solid var(--accent-secondary);
+    box-shadow: 0 0 10px 0 var(--accent-primary);
+}
+
+.input-field::placeholder, .select-field::placeholder {
+    color: var(--secondary);
+    font-size: 1.3rem;
+}
+
+.input-big, .select-big {
+    width: 50%;
+    font-size: 1.3rem;
+}
+
+.input-big::placeholder, .select-big::placeholder {
+    font-size: 1.3rem;
+}
+
+.input-medium, .select-medium {
+    width: 30%;
+    font-size: 1rem;
+}
+
+.input-medium::placeholder, .select-medium::placeholder {
+    font-size: 1rem;
+}
+
+.input-small {
+    width: 3.5rem;
+    font-size: 1rem;
+}
+
+.select-small {
+    width: 8rem;
+    font-size: 1rem;
+}
+
+.label-title {
+    color: white;
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.label-time {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.btn-submit {
+    background: linear-gradient(to bottom right, var(--accent-primary), var(--accent-secondary));
+    color: var(--text);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-style: italic;
+    transition: box-shadow 0.3s ease;
+}
+
+.btn-submit:hover {
+    box-shadow: 0 0 15px 0 var(--accent-primary);
+}
+
+.times-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.leaderboard {
+    margin-top: 5rem;
+    width: 100%;
+    text-align: center;
+    color: white;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.leaderboard th {
+    background: var(--accent-primary);
+}
+
+.leaderboard .helmet {
+    width: 5rem;
+}
+
+.leaderboard .number {
+    width: 7rem;
+}
+
+.leaderboard .team {
+    width: 12rem;
+    text-align: left;
+}
+
+.leaderboard .team-img {
+    text-align: left;
+}
