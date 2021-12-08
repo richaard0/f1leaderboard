@@ -4,7 +4,7 @@ const tracksSelect = document.querySelector(".tracks");
 const addButton = document.querySelector(".add-time-btn");
 
 const eventString = localStorage.getItem('event');
-const event = JSON.parse(eventString);
+const eventName = JSON.parse(eventString);
 
 const minutes = document.querySelector("#minutes");
 const seconds = document.querySelector("#seconds");
@@ -13,10 +13,10 @@ const tyres = document.querySelector("#tyres");
 
 const tableRoot = document.querySelector(".table-root");
 
-const allTimes = [];
+const allLapTimes = [];
+let fastestLapTimes = [];
 
-const title = document.querySelector(".title");
-title.innerText = event.title;
+setTitle();
 
 // Add tracks to the select menu
 tracks.forEach(track => {
@@ -45,52 +45,65 @@ addButton.addEventListener("click", (e) => {
             minutes: minutes.value,
             seconds: seconds.value,
             fractions: fractions.value
-        }        ,
+        },
         tyres: tyres.value
     }
 
-    allTimes.push(timeInfo);
-    console.log(allTimes);
-    tableRoot.innerHTML = "";  
-    allTimes.forEach(timeInfo => {
-        addToTable(timeInfo);
+    allLapTimes.push(timeInfo);
+    tableRoot.innerHTML = "";
+
+    fastestLapTimes = getFastestLapsByDrivers(allLapTimes);
+    fastestLapTimes.forEach(fastestLap => {
+        addRowToTable(fastestLap);
     })
 })
 
-function addToTable(timeInfo){
+function addRowToTable(timeInfo) {
     const tableRow = document.createElement("tr");
-    const driverNumberCell = document.createElement("td");
-    const driverHelmetCell = document.createElement("td");
-    const driverNameCell = document.createElement("td");
-    const driverTeamCell = document.createElement("td");
-    const teamImageCell = document.createElement("td");
-    const timeCell = document.createElement("td");
-    const gapCell = document.createElement("td");
-    const tyreCell = document.createElement("td");
+    const row = {
+        driverNumberCell: document.createElement("td"),
+        driverHelmetCell: document.createElement("td"),
+        driverNameCell: document.createElement("td"),
+        driverTeamCell: document.createElement("td"),
+        teamImageCell: document.createElement("td"),
+        timeCell: document.createElement("td"),
+        gapCell: document.createElement("td"),
+        tyreCell: document.createElement("td"),
+        lapCell: document.createElement("td")
+    }
 
-    driverNumberCell.innerText = timeInfo.driverNumber;
-    driverHelmetCell.appendChild(getHelmetImage(timeInfo.driverNumber));
-    driverNameCell.innerText = getDriverName(timeInfo.driverNumber);
-    driverTeamCell.innerText = getDriverTeam(timeInfo.driverNumber);
-    teamImageCell.appendChild(getTeamImage(timeInfo.driverNumber));
-    timeCell.innerText = `${timeInfo.time.minutes}:${timeInfo.time.seconds}:${timeInfo.time.fractions}`;
-    gapCell.innerText = "---";
-    tyreCell.innerText = timeInfo.tyres;
+    row.driverNumberCell.innerText = timeInfo.driverNumber;
+    row.driverHelmetCell.appendChild(getHelmetImage(timeInfo.driverNumber));
+    row.driverNameCell.innerText = getDriverName(timeInfo.driverNumber);
+    row.driverTeamCell.innerText = getDriverTeam(timeInfo.driverNumber);
+    row.teamImageCell.appendChild(getTeamImage(timeInfo.driverNumber));
+    row.timeCell.innerText = `${timeInfo.time.minutes}:${timeInfo.time.seconds}:${timeInfo.time.fractions}`;
+    row.gapCell.innerText = "---";
+    row.tyreCell.innerText = timeInfo.tyres;
+    row.lapCell.innerText = "1";
 
-    tableRow.appendChild(driverNumberCell);
-    tableRow.appendChild(driverHelmetCell);
-    tableRow.appendChild(driverNameCell);
-    tableRow.appendChild(driverTeamCell);
-    tableRow.appendChild(teamImageCell);
-    tableRow.appendChild(timeCell);
-    tableRow.appendChild(gapCell);
-    tableRow.appendChild(tyreCell);
-
+    for (let td in row) {
+        tableRow.appendChild(row[td]);
+    }
     tableRoot.appendChild(tableRow);
-    
 }
 
-function getHelmetImage(driverNumber){
+function getFastestLapsByDrivers(times) {
+    const fastestLapTimes = [];
+    const sortedLapTimes = sortTimes(times);
+    const drivers = getDrivers(times);
+
+    // Ugly but it works.
+    // I get an array of each driver's fastest lap times then push the first index of that array into the fastestLapTimes array.
+    for (let driver of drivers) {
+        const driverLapTimes = sortedLapTimes.filter(time => time.driverNumber === driver);
+        fastestLapTimes.push(driverLapTimes[0]);
+    }
+
+    return fastestLapTimes;
+}
+
+function getHelmetImage(driverNumber) {
     const driverName = getDriverName(driverNumber);
     const lastName = driverName.split(" ")[1];
     const helmet = document.createElement("img");
@@ -100,21 +113,46 @@ function getHelmetImage(driverNumber){
     return helmet;
 }
 
-function getDriverName(driverNumber){
+function getDriverName(driverNumber) {
     return drivers.find(driver => driver.number === driverNumber).name;
 }
 
-function getDriverTeam(driverNumber){
+function getDriverTeam(driverNumber) {
     return drivers.find(driver => driver.number === driverNumber).team;
 }
 
-function getTeamImage(driverNumber){
+function getTeamImage(driverNumber) {
     const teamName = getDriverTeam(driverNumber);
     const teamImage = document.createElement("img");
     teamImage.src = teams.find(team => team.name === teamName).image;
     teamImage.classList.add("team-img");
     teamImage.alt = `${teamName} car`;
     return teamImage;
+}
+
+function setTitle() {
+    const title = document.querySelector(".title");
+    title.innerText = eventName.title;
+}
+
+function sortTimes(times) {
+    return times.sort((a, b) => {
+        return ((a.time.minutes * 60 * 1000) + (a.time.seconds * 1000) + a.time.fractions) - ((b.time.minutes * 60 * 1000) + (b.time.seconds * 1000) + b.time.fractions);
+    });
+}
+
+function getDrivers(times) {
+    const drivers = [];
+    times.forEach(time => {
+        if(!drivers.includes(time.driverNumber)){
+            drivers.push(time.driverNumber);
+        }
+    });
+    return drivers;
+}
+
+function getFastestLap(driverNumber, times) {
+    return times.find(time => time.driverNumber === driverNumber && time.time.minutes === 0 && time.time.seconds === 0 && time.time.fractions === 0); // What does this line do?
 }
 
 // function getGap(driverNumber, time){
