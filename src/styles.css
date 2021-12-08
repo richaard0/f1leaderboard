@@ -39,16 +39,18 @@ h1 {
     width: 3rem;
     height: auto;
     object-fit: cover;
-    filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
-    -webkit-filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
+    filter: drop-shadow(0 0 5px black);
+    -webkit-filter: drop-shadow(0 0 5px black);
+    background: none;
 }
 
 .team-img {
     width: 10rem;
     height: auto;
     object-fit: cover;
-    -webkit-filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
-    filter: drop-shadow(0 3px 8px rgb(136, 136, 136));
+    -webkit-filter: drop-shadow(0 0 5px black);
+    filter: drop-shadow(0 0 5px black);
+    background: none;
 }
 
 .create-event-form {
@@ -181,4 +183,8 @@ h1 {
 
 .leaderboard .team-img {
     text-align: left;
+}
+
+.table-root td {
+    height: 4rem;
 }
