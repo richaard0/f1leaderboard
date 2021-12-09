@@ -1,120 +1,120 @@
 const drivers = [
     {
-        number: "44",
+        number: 44,
         name: "Lewis Hamilton",
         team: "Mercedes",
         helmet: "./assets/helmets/hamilton_helmet.png"
     },
     {
-        number: "77",
+        number: 77,
         name: "Valtteri Bottas",
         team: "Mercedes",
         helmet: "./assets/helmets/bottas_helmet.png"
     },
     {
-        number: "33",
+        number: 33,
         name: "Max Verstappen",
         team: "Red Bull Racing",
         helmet: "./assets/helmets/verstappen_helmet.png"
     },
     {
-        number: "11",
+        number: 11,
         name: "Sergio Perez",
         team: "Red Bull Racing",
         helmet: "./assets/helmets/perez_helmet.png"
     },
     {
-        number: "16",
+        number: 16,
         name: "Charles Leclerc",
         team: "Ferrari",
         helmet: "./assets/helmets/leclerc_helmet.png"
     },
     {
-        number: "55",
+        number: 55,
         name: "Carlos Sainz",
         team: "Ferrari",
         helmet: "./assets/helmets/sainz_helmet.png"
     },
     {
-        number: "4",
+        number: 4,
         name: "Lando Norris",
         team: "McLaren",
         helmet: "./assets/helmets/norris_helmet.png"
     },
     {
-        number: "3",
+        number: 3,
         name: "Daniel Ricciardo",
         team: "McLaren",
         helmet: "./assets/helmets/ricciardo_helmet.png"
     },
     {
-        number: "31",
+        number: 31,
         name: "Esteban Ocon",
         team: "Alpine",
         helmet: "./assets/helmets/ocon_helmet.png"
     },
     {
-        number: "14",
+        number: 14,
         name: "Fernando Alonso",
         team: "Alpine",
         helmet: "./assets/helmets/alonso_helmet.png"
     },
     {
-        number: "10",
+        number: 10,
         name: "Pierre Gasly",
         team: "Alpha Tauri",
         helmet: "./assets/helmets/gasly_helmet.png"
     },
     {
-        number: "22",
+        number: 22,
         name: "Yuki Tsunoda",
         team: "Alpha Tauri",
         helmet: "./assets/helmets/tsunoda_helmet.png"
     },
     {
-        number: "5",
+        number: 5,
         name: "Sebastien Vettel",
         team: "Aston Martin",
         helmet: "./assets/helmets/vettel_helmet.png"
     },
     {
-        number: "18",
+        number: 18,
         name: "Lance Stroll",
         team: "Aston Martin",
         helmet: "./assets/helmets/stroll_helmet.png"
     },
     {
-        number: "7",
+        number: 7,
         name: "Kimi Räikkönen",
         team: "Alfa Romeo",
         helmet: "./assets/helmets/raikkonen_helmet.png"
     },
     {
-        number: "99",
+        number: 99,
         name: "Antonio Giovinazzi",
         team: "Alfa Romeo",
         helmet: "./assets/helmets/giovinazzi_helmet.png"
     },
     {
-        number: "63",
+        number: 63,
         name: "George Russell",
         team: "Williams",
         helmet: "./assets/helmets/russell_helmet.png"
     },
     {
-        number: "6",
+        number: 6,
         name: "Nicholas Latifi",
         team: "Williams",
         helmet: "./assets/helmets/latifi_helmet.png"
     },
     {
-        number: "47",
+        number: 47,
         name: "Mick Schumacher",
         team: "Haas",
         helmet: "./assets/helmets/schumacher_helmet.png"
     },
     {
-        number: "9",
+        number: 9,
         name: "Nikita Mazepin",
         team: "Haas",
         helmet: "./assets/helmets/mazepin_helmet.png"

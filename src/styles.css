@@ -188,3 +188,15 @@ h1 {
 .table-root td {
     height: 4rem;
 }
+
+/*
+ To Delete
+*/
+.modal-button {
+    width: 3rem;
+    background: white;
+}
+
+.modal-button * {
+    background: inherit;
+}

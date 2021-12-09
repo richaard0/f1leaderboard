@@ -40,11 +40,11 @@ addButton.addEventListener("click", (e) => {
 
     const timeInfo = {
         track: tracksSelect.value,
-        driverNumber: driversSelect.value,
+        driverNumber: Number(driversSelect.value),
         time: {
-            minutes: minutes.value,
-            seconds: seconds.value,
-            fractions: fractions.value
+            minutes: Number(minutes.value),
+            seconds: Number(seconds.value),
+            fractions: Number(fractions.value)
         },
         tyres: tyres.value
     }
@@ -53,12 +53,19 @@ addButton.addEventListener("click", (e) => {
     tableRoot.innerHTML = "";
 
     fastestLapTimes = getFastestLapsByDrivers(allLapTimes);
-    fastestLapTimes.forEach(fastestLap => {
-        addRowToTable(fastestLap);
+    const fastestLapTime = getFastestLap(allLapTimes)
+    fastestLapTimes.forEach(lapData => {
+        addRowToTable(lapData, fastestLapTime);
     })
 })
 
-function addRowToTable(timeInfo) {
+function addRowToTable(lapData, fastestLap) {
+    const lapTime = {
+        minutes: lapData.time.minutes,
+        seconds: lapData.time.seconds,
+        fractions: lapData.time.fractions
+    }
+
     const tableRow = document.createElement("tr");
     const row = {
         driverNumberCell: document.createElement("td"),
@@ -71,93 +78,18 @@ function addRowToTable(timeInfo) {
         tyreCell: document.createElement("td"),
         lapCell: document.createElement("td")
     }
-
-    row.driverNumberCell.innerText = timeInfo.driverNumber;
-    row.driverHelmetCell.appendChild(getHelmetImage(timeInfo.driverNumber));
-    row.driverNameCell.innerText = getDriverName(timeInfo.driverNumber);
-    row.driverTeamCell.innerText = getDriverTeam(timeInfo.driverNumber);
-    row.teamImageCell.appendChild(getTeamImage(timeInfo.driverNumber));
-    row.timeCell.innerText = `${timeInfo.time.minutes}:${timeInfo.time.seconds}:${timeInfo.time.fractions}`;
-    row.gapCell.innerText = "---";
-    row.tyreCell.innerText = timeInfo.tyres;
-    row.lapCell.innerText = "1";
+    row.driverNumberCell.innerText = lapData.driverNumber;
+    row.driverHelmetCell.appendChild(getHelmetImage(lapData.driverNumber));
+    row.driverNameCell.innerText = getDriverName(lapData.driverNumber);
+    row.driverTeamCell.innerText = getDriverTeam(lapData.driverNumber);
+    row.teamImageCell.appendChild(getTeamImage(lapData.driverNumber));
+    row.timeCell.innerText = `${lapData.time.minutes}:${lapData.time.seconds}:${lapData.time.fractions}`;
+    row.gapCell.innerText = calculateGapToFastestLap(fastestLap, lapTime) === 0 ? "---" : calculateGapToFastestLap(fastestLap, lapTime) / 1000;
+    row.tyreCell.innerText = lapData.tyres;
+    row.lapCell.innerText = getLapCount(lapData.driverNumber);
 
     for (let td in row) {
         tableRow.appendChild(row[td]);
     }
     tableRoot.appendChild(tableRow);
 }
-
-function getFastestLapsByDrivers(times) {
-    const fastestLapTimes = [];
-    const sortedLapTimes = sortTimes(times);
-    const drivers = getDrivers(times);
-
-    // Ugly but it works.
-    // I get an array of each driver's fastest lap times then push the first index of that array into the fastestLapTimes array.
-    for (let driver of drivers) {
-        const driverLapTimes = sortedLapTimes.filter(time => time.driverNumber === driver);
-        fastestLapTimes.push(driverLapTimes[0]);
-    }
-
-    return fastestLapTimes;
-}
-
-function getHelmetImage(driverNumber) {
-    const driverName = getDriverName(driverNumber);
-    const lastName = driverName.split(" ")[1];
-    const helmet = document.createElement("img");
-    helmet.src = drivers.find(driver => driver.name === driverName).helmet;
-    helmet.classList.add("helmet-img");
-    helmet.alt = `${driverName} helmet`;
-    return helmet;
-}
-
-function getDriverName(driverNumber) {
-    return drivers.find(driver => driver.number === driverNumber).name;
-}
-
-function getDriverTeam(driverNumber) {
-    return drivers.find(driver => driver.number === driverNumber).team;
-}
-
-function getTeamImage(driverNumber) {
-    const teamName = getDriverTeam(driverNumber);
-    const teamImage = document.createElement("img");
-    teamImage.src = teams.find(team => team.name === teamName).image;
-    teamImage.classList.add("team-img");
-    teamImage.alt = `${teamName} car`;
-    return teamImage;
-}
-
-function setTitle() {
-    const title = document.querySelector(".title");
-    title.innerText = eventName.title;
-}
-
-function sortTimes(times) {
-    return times.sort((a, b) => {
-        return ((a.time.minutes * 60 * 1000) + (a.time.seconds * 1000) + a.time.fractions) - ((b.time.minutes * 60 * 1000) + (b.time.seconds * 1000) + b.time.fractions);
-    });
-}
-
-function getDrivers(times) {
-    const drivers = [];
-    times.forEach(time => {
-        if(!drivers.includes(time.driverNumber)){
-            drivers.push(time.driverNumber);
-        }
-    });
-    return drivers;
-}
-
-function getFastestLap(driverNumber, times) {
-    return times.find(time => time.driverNumber === driverNumber && time.time.minutes === 0 && time.time.seconds === 0 && time.time.fractions === 0); // What does this line do?
-}
-
-// function getGap(driverNumber, time){
-//     const driver = drivers.find(driver => driver.number === driverNumber);
-//     const driverGap = driver.gap;
-//     const driverTime = time.minutes * 60 + time.seconds + time.fractions / 100;
-//     return driverGap - driverTime;
-// }
