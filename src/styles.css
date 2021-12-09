@@ -177,6 +177,7 @@ h1 {
     color: white;
     border-collapse: collapse;
     table-layout: fixed;
+    margin-bottom: 5rem;
 }
 
 .leaderboard th {
