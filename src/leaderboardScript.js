@@ -62,7 +62,6 @@ addButton.addEventListener("click", (e) => {
     allLapTimes.push(timeInfo);
 
 
-
     let fastestLapTimes = getFastestLapsByDrivers(allLapTimes);
 
     setAllLapTimes(allLapTimes);
@@ -84,7 +83,7 @@ function addRowToTable(lapData, fastestLap) {
         modal.classList.toggle('modal-visible');
         blackBg.classList.toggle('blackened-visible');
         displayDataModalTable();
-    } )
+    })
     const row = {
         driverNumberCell: document.createElement("td"),
         driverHelmetCell: document.createElement("td"),
@@ -128,19 +127,19 @@ closeModal.addEventListener('click', () => {
 //
 //
 
-function getTimesFromDriver(driverNumber){
+function getTimesFromDriver(driverNumber) {
     let allLapTimes = fetchAllLapTimes();
     let driverLaps = [];
     // console.log(allLapTimes);
     allLapTimes.forEach(lapData => {
-        if(lapData.driverNumber === driverNumber){
+        if (lapData.driverNumber === driverNumber) {
             driverLaps.push(lapData);
         }
     })
     localStorage.setItem('driverLaps', JSON.stringify(driverLaps));
 }
 
-function displayDataModalTable(){
+function displayDataModalTable() {
     modalTableRoot.innerHTML = "";
 
     const driverLaps = fetchDriverLaps()
@@ -151,20 +150,41 @@ function displayDataModalTable(){
         lapCount++;
         const modalRow = document.createElement('tr');
         const modalRows = {
-            lapCountCell : document.createElement('td'),
-            lapTimeCell : document.createElement('td'),
-            gapCell : document.createElement('td'),
-            tyreCell : document.createElement('td'),
-            editCell : document.createElement('td'),
-            editIcon : document.createElement('i'),
-            deleteIcon : document.createElement('i')
+            lapCountCell: document.createElement('td'),
+            lapTimeCell: document.createElement('td'),
+            gapCell: document.createElement('td'),
+            tyreCell: document.createElement('td'),
+            editCell: document.createElement('td'),
+            editIcon: document.createElement('i'),
+            deleteIcon: document.createElement('i')
         }
 
         modalRows.lapCountCell.innerText = lapCount;
         modalRows.lapTimeCell.innerText = `${lap.time.minutes}:${lap.time.seconds}:${lap.time.fractions}`;
+        modalRows.lapTimeCell.contentEditable = "false"
         modalRows.gapCell.innerText = calculateGapToFastestLap(driverFastestLap, lap.time) === 0 ? "---" : `+${(calculateGapToFastestLap(driverFastestLap, lap.time) / 1000) * -1}`;
         modalRows.tyreCell.innerText = lap.tyres;
         modalRows.editIcon.classList.add('fas', 'fa-edit');
+        modalRows.editIcon.addEventListener('click', function () {
+            console.log("edit");
+            modalRows.lapTimeCell.isContentEditable = true;
+            modalRows.lapTimeCell.isContentEditable ? modalRows.lapTimeCell.contentEditable = "false" : modalRows.lapTimeCell.contentEditable = "true";
+            this.classList.toggle('fa-edit');
+            this.classList.toggle('fa-check');
+            // update the lap time in the driverLaps array
+            // TODO: add validation later
+            let updatedLap = {
+                id: lap.id,
+                time: {
+                    minutes: Number(modalRows.lapTimeCell.innerText.split(':')[0]),
+                    seconds: Number(modalRows.lapTimeCell.innerText.split(':')[1]),
+                    fractions: Number(modalRows.lapTimeCell.innerText.split(':')[2])
+                },
+                tyres: modalRows.tyreCell.innerText,
+                driverNumber: lap.driverNumber
+            }
+            updateLapTime(updatedLap);
+        })
         modalRows.deleteIcon.classList.add('fas', 'fa-trash-alt');
         modalRows.deleteIcon.addEventListener('click', () => {
             deleteSingleLap(lap.id);
@@ -181,11 +201,34 @@ function displayDataModalTable(){
     })
 }
 
-function deleteSingleLap(lapId){
+function updateLapTime(updatedLap) {
+    // find and replace the lap time in local storage
+    // replace in allLapTimes and driverLaps
+    const allLapTimes = fetchAllLapTimes();
+    const driverLaps = fetchDriverLaps();
+    findAndReplace(updatedLap, allLapTimes);
+    findAndReplace(updatedLap, driverLaps);
+    setDriverLaps(driverLaps);
+    setAllLapTimes(allLapTimes);
+    updateLeaderboard();
+}
+
+function findAndReplace(updatedLap, laps) {
+    laps.forEach(lap => {
+        if (lap.id === updatedLap.id) {
+            lap.time.minutes = updatedLap.time.minutes;
+            lap.time.seconds = updatedLap.time.seconds;
+            lap.time.fractions = updatedLap.time.fractions;
+            lap.tyres = updatedLap.tyres;
+        }
+    })
+}
+
+function deleteSingleLap(lapId) {
     let allLapTimes = fetchAllLapTimes();
 
     allLapTimes.forEach(lapData => {
-        if(lapData.id === lapId){
+        if (lapData.id === lapId) {
             allLapTimes.splice(allLapTimes.indexOf(lapData), 1);
         }
     })
@@ -193,7 +236,7 @@ function deleteSingleLap(lapId){
     const driverLapsString = localStorage.getItem('driverLaps');
     const driverLaps = JSON.parse(driverLapsString);
     driverLaps.forEach(lap => {
-        if(lap.id === lapId){
+        if (lap.id === lapId) {
             driverLaps.splice(driverLaps.indexOf(lap), 1);
         }
     })
