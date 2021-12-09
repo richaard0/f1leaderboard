@@ -19,7 +19,7 @@ const blackBg = document.querySelector(".blackened");
 const closeModal = document.querySelector('.modal-close');
 const modalTableRoot = document.querySelector('.driver-laps-table-root');
 
-let totalLapCounter = getTotalLapCount();
+let currentLapId = getCurrentLapId();
 
 setTitle();
 
@@ -48,7 +48,7 @@ addButton.addEventListener("click", (e) => {
     e.preventDefault();
     let allLapTimes = fetchAllLapTimes();
     const timeInfo = {
-        id: ++totalLapCounter,
+        id: ++currentLapId,
         track: tracksSelect.value,
         driverNumber: Number(driversSelect.value),
         time: {
@@ -123,10 +123,6 @@ closeModal.addEventListener('click', () => {
 });
 
 
-// Check if functions below need to be moved to helpers
-//
-//
-
 function getTimesFromDriver(driverNumber) {
     let allLapTimes = fetchAllLapTimes();
     let driverLaps = [];
@@ -164,11 +160,12 @@ function displayDataModalTable() {
         modalRows.lapTimeCell.contentEditable = "false"
         modalRows.gapCell.innerText = calculateGapToFastestLap(driverFastestLap, lap.time) === 0 ? "---" : `+${(calculateGapToFastestLap(driverFastestLap, lap.time) / 1000) * -1}`;
         modalRows.tyreCell.innerText = lap.tyres;
+        modalRows.tyreCell.contentEditable = "false"
         modalRows.editIcon.classList.add('fas', 'fa-edit');
         modalRows.editIcon.addEventListener('click', function () {
             console.log("edit");
-            modalRows.lapTimeCell.isContentEditable = true;
             modalRows.lapTimeCell.isContentEditable ? modalRows.lapTimeCell.contentEditable = "false" : modalRows.lapTimeCell.contentEditable = "true";
+            modalRows.tyreCell.isContentEditable ? modalRows.tyreCell.contentEditable = "false" : modalRows.tyreCell.contentEditable = "true";
             this.classList.toggle('fa-edit');
             this.classList.toggle('fa-check');
             // update the lap time in the driverLaps array

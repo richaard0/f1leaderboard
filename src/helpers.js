@@ -121,13 +121,15 @@ function getDriverLapCount(driverNumber){
     return lapCount;
 }
 
-function getTotalLapCount(){
+function getCurrentLapId(){
     let allLapTimes = fetchAllLapTimes();
-    let lapCount = 0;
-    allLapTimes.forEach(time => {
-        lapCount++;
+    let lapId = 0;
+    allLapTimes.forEach(lapTime => {
+        if (lapTime.id >= lapId) {
+            lapId = lapTime.id;
+        }
     });
-    return lapCount;
+    return lapId;
 }
 
 function getFastestLap(lapTimes) {
