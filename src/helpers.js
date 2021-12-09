@@ -44,7 +44,8 @@ function setTitle() {
 }
 
 function sortTimes(times) {
-    return times.sort((a, b) => {
+    const sortedTimes = [ ...times ];
+    return sortedTimes.sort((a, b) => {
         return ((a.time.minutes * 60 * 1000) + (a.time.seconds * 1000) + a.time.fractions) -
             ((b.time.minutes * 60 * 1000) + (b.time.seconds * 1000) + b.time.fractions);
     });
@@ -70,8 +71,8 @@ function getLapCount(driverNumber){
     return lapCount;
 }
 
-function getFastestLap(allLapTimes) {
-    return sortTimes(allLapTimes)[0];
+function getFastestLap(lapTimes) {
+    return sortTimes(lapTimes)[0];
 }
 
 function calculateGapToFastestLap(fastestLap, lapTime) {

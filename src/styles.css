@@ -35,6 +35,20 @@ h1 {
     font-size: 1.5rem;
 }
 
+.fa-chevron-left {
+    position: absolute;
+    top: 1.5rem;
+    font-size: 2rem;
+    color: var(--accent-primary);
+    background: none;
+    transition: filter 0.3s ease;
+}
+
+.fa-chevron-left:hover {
+    color: var(--accent-secondary);
+   filter: drop-shadow(0 0 5px var(--accent-secondary));
+}
+
 .helmet-img {
     width: 3rem;
     height: auto;
@@ -187,16 +201,4 @@ h1 {
 
 .table-root td {
     height: 4rem;
-}
-
-/*
- To Delete
-*/
-.modal-button {
-    width: 3rem;
-    background: white;
-}
-
-.modal-button * {
-    background: inherit;
 }
