@@ -1,14 +1,63 @@
+// CRUD FUNCTIONS
+function fetchAllLapTimes() {
+    let allLapTimesString = localStorage.getItem('allLapTimes');
+    return JSON.parse(allLapTimesString);
+}
+
+function setAllLapTimes(allLapTimes) {
+    localStorage.setItem('allLapTimes', JSON.stringify(allLapTimes));
+}
+
+function fetchFastestLapTimes() {
+    let fastestLapTimesString = localStorage.getItem('fastestLapTimes');
+    return JSON.parse(fastestLapTimesString);
+}
+
+function setFastestLapTimes(fastestLapTimes) {
+    localStorage.setItem('fastestLapTimes', JSON.stringify(fastestLapTimes));
+}
+
+function fetchDriverLaps() {
+    let driverLapsString = localStorage.getItem('driverLaps');
+    return JSON.parse(driverLapsString);
+}
+
+function setDriverLaps(driverLaps) {
+    localStorage.setItem('driverLaps', JSON.stringify(driverLaps));
+}
+
+// HELPER FUNCTIONS
+function updateLeaderboard(){
+    const allLapTimes = fetchAllLapTimes();
+    const leaderboardTimes = getFastestLapsByDrivers(allLapTimes);
+    console.log(leaderboardTimes,"leaderboardTimes");
+    const fastestLap = getFastestLap(leaderboardTimes);
+    leaderboardTableRoot.innerHTML = "";
+    leaderboardTimes.forEach(lapData => {
+        addRowToTable(lapData, fastestLap)
+    })
+}
+
 function getFastestLapsByDrivers(times) {
-    const fastestLapTimes = [];
+    const fastestLapTimesByDriver = [];
     const sortedLapTimes = sortTimes(times);
     const drivers = getDrivers(times);
+    console.log(drivers);
+    // Get the fastest lap for each driver in order of fastest to slowest
+    for (const driver of drivers) {
+        const fastestLap = sortedLapTimes.find(lap => lap.driverNumber === driver);
+        fastestLapTimesByDriver.push(fastestLap);
+    }
+
+    return sortTimes(fastestLapTimesByDriver);
 
     // Ugly but it works.
     // I get an array of each driver's fastest lap times then push the first index of that array into the fastestLapTimes array.
-    for (let driver of drivers) {
-        const driverLapTimes = sortedLapTimes.filter(time => time.driverNumber === driver);
-        fastestLapTimes.push(driverLapTimes[0]);
-    }
+    // for (let driver of drivers) {
+    //     const driverLapTimes = sortedLapTimes.filter(time => time.driverNumber === driver);
+    //     console.log(driverLapTimes,"driverLapTimes");
+    //     fastestLapTimes.push(driverLapTimes[0]);
+    // }
     return fastestLapTimes;
 }
 
@@ -61,12 +110,22 @@ function getDrivers(times) {
     return drivers;
 }
 
-function getLapCount(driverNumber){
+function getDriverLapCount(driverNumber){
+    let allLapTimes = fetchAllLapTimes();
     let lapCount = 0;
     allLapTimes.forEach(time => {
         if (time.driverNumber === driverNumber) {
             lapCount++;
         }
+    });
+    return lapCount;
+}
+
+function getTotalLapCount(){
+    let allLapTimes = fetchAllLapTimes();
+    let lapCount = 0;
+    allLapTimes.forEach(time => {
+        lapCount++;
     });
     return lapCount;
 }
