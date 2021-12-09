@@ -4,9 +4,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 40rem;
-    background: white;
+    width: 50rem;
+    background: var(--primary);
     display: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
 }
 
 .modal-visible {
@@ -18,16 +21,25 @@
 }
 
 .popup-modal h1 {
-    color: black;
+    color: white;
+    margin-bottom: 4rem;
 }
+
 
 .modal-close {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 1rem;
+    right: 1rem;
     padding: 1rem;
     cursor: pointer;
     font-size: 2rem;
+    color: var(--accent-primary);
+    background: none;
+    transition:  all ease 0.3s;
+}
+
+.modal-close:hover {
+    filter: drop-shadow(0 0 5px var(--accent-primary));
 }
 
 .blackened {
@@ -44,4 +56,49 @@
 
 .blackened-visible {
     display: block;
+}
+
+.driver-laps-table {
+    border-spacing: 0;
+    border: none;
+    text-align: center;
+    width: 85%;
+    margin: 0 auto;
+}
+
+.driver-laps-table thead {
+    background: var(--accent-primary);
+}
+
+.driver-laps-table th {
+    min-width: 4rem;
+}
+
+.driver-laps-table i {
+    margin-right: 1rem;
+}
+
+.driver-laps-table td{
+    height: 2rem;
+}
+
+.fa-edit, .fa-check, .fa-trash-alt {
+    cursor: pointer;
+    background: none;
+    transition: filter ease 0.3s, color ease 0.3s;
+}
+
+.fa-edit:hover, .fa-check:hover, .fa-trash-alt:hover {
+    color: var(--accent-primary);
+    filter: drop-shadow(0 0 5px var(--accent-primary));
+}
+
+.editable {
+    border: 2px solid var(--accent-secondary);
+    border-radius: 10px;
+    background: var(--secondary);
+}
+
+.editable:focus, .editable:focus-visible {
+    outline: none;
 }

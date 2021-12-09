@@ -139,7 +139,8 @@ function displayDataModalTable() {
     modalTableRoot.innerHTML = "";
 
     const driverLaps = fetchDriverLaps()
-
+    const modalTitle = document.querySelector(".modal-title");
+    modalTitle.innerText = `${driverLaps[0].driverNumber} - ${getDriverName(driverLaps[0].driverNumber)} - ${getDriverTeam(driverLaps[0].driverNumber)}`;
     const driverFastestLap = getFastestLap(driverLaps);
     let lapCount = 0;
     driverLaps.forEach(lap => {
@@ -151,21 +152,23 @@ function displayDataModalTable() {
             gapCell: document.createElement('td'),
             tyreCell: document.createElement('td'),
             editCell: document.createElement('td'),
-            editIcon: document.createElement('i'),
-            deleteIcon: document.createElement('i')
         }
+        let editIcon = document.createElement('i');
+        let deleteIcon = document.createElement('i');
 
         modalRows.lapCountCell.innerText = lapCount;
         modalRows.lapTimeCell.innerText = `${lap.time.minutes}:${lap.time.seconds}:${lap.time.fractions}`;
         modalRows.lapTimeCell.contentEditable = "false"
         modalRows.gapCell.innerText = calculateGapToFastestLap(driverFastestLap, lap.time) === 0 ? "---" : `+${(calculateGapToFastestLap(driverFastestLap, lap.time) / 1000) * -1}`;
         modalRows.tyreCell.innerText = lap.tyres;
-        modalRows.tyreCell.contentEditable = "false"
-        modalRows.editIcon.classList.add('fas', 'fa-edit');
-        modalRows.editIcon.addEventListener('click', function () {
-            console.log("edit");
+        modalRows.tyreCell.contentEditable = "false";
+        modalRows.editCell.classList.add('edit-cell');
+        editIcon.classList.add('fas', 'fa-edit');
+        editIcon.addEventListener('click', function () { // not using arrow function to access "this"
             modalRows.lapTimeCell.isContentEditable ? modalRows.lapTimeCell.contentEditable = "false" : modalRows.lapTimeCell.contentEditable = "true";
+            modalRows.lapTimeCell.classList.toggle('editable');
             modalRows.tyreCell.isContentEditable ? modalRows.tyreCell.contentEditable = "false" : modalRows.tyreCell.contentEditable = "true";
+            modalRows.tyreCell.classList.toggle('editable');
             this.classList.toggle('fa-edit');
             this.classList.toggle('fa-check');
             // update the lap time in the driverLaps array
@@ -182,14 +185,14 @@ function displayDataModalTable() {
             }
             updateLapTime(updatedLap);
         })
-        modalRows.deleteIcon.classList.add('fas', 'fa-trash-alt');
-        modalRows.deleteIcon.addEventListener('click', () => {
+        deleteIcon.classList.add('fas', 'fa-trash-alt');
+        deleteIcon.addEventListener('click', () => {
             deleteSingleLap(lap.id);
             displayDataModalTable();
         })
-        modalRows.editCell.appendChild(modalRows.editIcon);
-        modalRows.editCell.appendChild(modalRows.deleteIcon);
-
+        modalRows.editCell.appendChild(editIcon);
+        modalRows.editCell.appendChild(deleteIcon);
+        console.log(modalRows.editCell);
         for (let td in modalRows) {
             modalRow.appendChild(modalRows[td]);
         }

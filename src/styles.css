@@ -3,6 +3,7 @@
     --secondary: #3B3463;
     --accent-primary: #E61C7F;
     --accent-secondary: #DF06B4;
+    --accent-tertiary: #42c4d5;
     --text: #FFF;
 }
 
@@ -199,6 +200,19 @@ h1 {
     text-align: left;
 }
 
+.leaderboard tr:hover {
+    cursor: pointer;
+}
+
+.leaderboard tr td {
+    transition: background 0.3s ease;
+}
+
+.leaderboard tr:hover td {
+    background: var(--secondary);
+}
+
 .table-root td {
     height: 4rem;
 }
+
