@@ -58,7 +58,7 @@ function getFastestLapsByDrivers(times) {
     //     console.log(driverLapTimes,"driverLapTimes");
     //     fastestLapTimes.push(driverLapTimes[0]);
     // }
-    return fastestLapTimes;
+    // return fastestLapTimes;
 }
 
 function getHelmetImage(driverNumber) {

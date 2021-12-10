@@ -183,7 +183,12 @@ function displayDataModalTable() {
                 tyres: modalRows.tyreCell.innerText,
                 driverNumber: lap.driverNumber
             }
-            updateLapTime(updatedLap);
+            console.log("before update laptime in modal")
+            if (!modalRows.lapTimeCell.isContentEditable) {
+                updateLapTime(updatedLap);
+                displayDataModalTable();
+            }
+            // updateLapTime(updatedLap);
         })
         deleteIcon.classList.add('fas', 'fa-trash-alt');
         deleteIcon.addEventListener('click', () => {
@@ -204,6 +209,7 @@ function displayDataModalTable() {
 function updateLapTime(updatedLap) {
     // find and replace the lap time in local storage
     // replace in allLapTimes and driverLaps
+    console.log("in update lap time")
     const allLapTimes = fetchAllLapTimes();
     const driverLaps = fetchDriverLaps();
     findAndReplace(updatedLap, allLapTimes);
