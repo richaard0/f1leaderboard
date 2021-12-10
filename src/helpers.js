@@ -1,5 +1,8 @@
 // CRUD FUNCTIONS
 function fetchAllLapTimes() {
+    if (!localStorage.getItem('allLapTimes')){
+        localStorage.setItem('allLapTimes', JSON.stringify([]));
+    }
     let allLapTimesString = localStorage.getItem('allLapTimes');
     return JSON.parse(allLapTimesString);
 }
@@ -9,6 +12,9 @@ function setAllLapTimes(allLapTimes) {
 }
 
 function fetchFastestLapTimes() {
+    if (!localStorage.getItem('fastestLapTimes')){
+        localStorage.setItem('fastestLapTimes', JSON.stringify([]));
+    }
     let fastestLapTimesString = localStorage.getItem('fastestLapTimes');
     return JSON.parse(fastestLapTimesString);
 }
@@ -18,6 +24,9 @@ function setFastestLapTimes(fastestLapTimes) {
 }
 
 function fetchDriverLaps() {
+    if (!localStorage.getItem('driverLaps')){
+        localStorage.setItem('driverLaps', JSON.stringify([]));
+    }
     let driverLapsString = localStorage.getItem('driverLaps');
     return JSON.parse(driverLapsString);
 }
