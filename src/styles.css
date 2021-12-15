@@ -21,6 +21,7 @@ main {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 header {
@@ -46,6 +47,21 @@ h1 {
 }
 
 .fa-chevron-left:hover {
+    color: var(--accent-secondary);
+   filter: drop-shadow(0 0 5px var(--accent-secondary));
+}
+
+.delete-event {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: var(--accent-primary);
+    background: none;
+    transition: filter 0.3s ease;
+}
+
+.delete-event:hover {
     color: var(--accent-secondary);
    filter: drop-shadow(0 0 5px var(--accent-secondary));
 }
@@ -88,6 +104,7 @@ h1 {
 
 .input-field, .select-field {
     border: 2px solid var(--accent-primary);
+    background: var(--secondary);
     padding: 1rem;
     border-radius: 0.5rem;
     color: white;
@@ -158,6 +175,24 @@ h1 {
     transition: box-shadow 0.3s ease;
 }
 
+.btn-cancel {
+    background: none;
+    color: var(--text);
+    border: 2px solid var(--secondary);
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-style: italic;
+    transition: all ease 0.3s;
+}
+
+.btn-cancel:hover {
+    background: var(--secondary);
+    color: var(--text);
+}
+
 .btn-submit:hover {
     box-shadow: 0 0 15px 0 var(--accent-primary);
 }
@@ -203,6 +238,7 @@ h1 {
 
 .leaderboard tr:hover {
     cursor: pointer;
+    user-select: none;
 }
 
 .leaderboard tr td {
@@ -217,3 +253,23 @@ h1 {
     height: 4rem;
 }
 
+.event {
+    width: 50%;
+    margin: 2rem auto;
+    border: 2px solid var(--accent-primary);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    transition: background 0.3s ease;
+}
+
+.event:hover {
+    cursor: pointer;
+    background: var(--secondary);
+    transition: background 0.3s ease;
+}
+
+.event h3, .event p{;
+    color: var(--text);
+    margin: 0;
+    background: none;
+}

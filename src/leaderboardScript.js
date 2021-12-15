@@ -4,43 +4,63 @@ const tracksSelect = document.querySelector(".tracks");
 const addButton = document.querySelector(".add-time-btn");
 
 const eventString = localStorage.getItem('event');
-const eventName = JSON.parse(eventString);
 
 const minutes = document.querySelector("#minutes");
 const seconds = document.querySelector("#seconds");
 const fractions = document.querySelector("#fractions");
 const tyres = document.querySelector("#tyres");
+const deleteEvent = document.querySelector(".delete-event");
 
 const leaderboardTableRoot = document.querySelector(".table-root");
 
 // Modal stuff
-const modal = document.querySelector('.popup-modal');
+const driverModal = document.querySelector('.driver-modal');
 const blackBg = document.querySelector(".blackened");
-const closeModal = document.querySelector('.modal-close');
-const modalTableRoot = document.querySelector('.driver-laps-table-root');
+const blackBg2 = document.querySelector(".blackened2");
+const blurBg = document.querySelector(".blur");
+const closeDriverModal = document.querySelector('.modal-driver-close');
+const closeDeleteTimeModal = document.querySelector('.modal-delete-time-close');
+const closeDeleteEventModal = document.querySelector('.modal-delete-event-close');
+const lapsModalTableRoot = document.querySelector('.driver-laps-table-root');
+const deleteTimeModal = document.querySelector('.delete-time-modal');
+const confirmDeleteTime = document.querySelector('#confirm-delete-time-btn');
+const cancelDeleteTime = document.querySelector('#cancel-delete-time-btn');
+const deleteEventModal = document.querySelector('.delete-event-modal');
+const confirmDeleteEvent = document.querySelector('#confirm-delete-event-btn');
+const cancelDeleteEvent = document.querySelector('#cancel-delete-event-btn');
 
 let currentLapId = getCurrentLapId();
+let currentEvent = fetchCurrentEvent();
 
-setTitle();
 
+
+// After initial load
 window.addEventListener("load", () => {
+    setLeaderboardTitle();
     updateLeaderboard();
+    initialize();
+    initializeFromLocalStorage();
 });
 
-// Add tracks to the select menu
-tracks.forEach(track => {
-    const option = document.createElement("option");
-    option.value = track.name;
-    option.innerText = track.name;
-    tracksSelect.appendChild(option);
+
+deleteEvent.addEventListener("click", () => {
+    showDeleteEventModal();
 });
 
-// Add drivers to the select menu
-drivers.forEach(driver => {
-    const option = document.createElement("option");
-    option.value = driver.number;
-    option.innerText = `${driver.number} - ${driver.name} - ${driver.team}`;
-    driversSelect.appendChild(option);
+confirmDeleteEvent.addEventListener("click", () => {
+    handleDeleteEvent(currentEvent.id);
+});
+
+cancelDeleteEvent.addEventListener("click", () => {
+    hideDeleteEventModal();
+});
+
+closeDeleteEventModal.addEventListener("click", () => {
+    hideDeleteEventModal();
+});
+
+blackBg2.addEventListener("click", () => {
+    hideDeleteEventModal();
 });
 
 // Add button click behaviour
@@ -56,19 +76,22 @@ addButton.addEventListener("click", (e) => {
             seconds: Number(seconds.value),
             fractions: Number(fractions.value)
         },
-        tyres: tyres.value
+        tyres: tyres.value,
+        eventId: currentEvent.id
     }
 
     allLapTimes.push(timeInfo);
-
-
-    let fastestLapTimes = getFastestLapsByDrivers(allLapTimes);
+    let allLapTimesEvent = getAllLapTimesEvent(allLapTimes, currentEvent.id);
+    let fastestLapTimes = getFastestLapsByDrivers(allLapTimesEvent);
 
     setAllLapTimes(allLapTimes);
     setFastestLapTimes(fastestLapTimes);
+    setAllLapTimesCurrentEvent(allLapTimesEvent);
 
     updateLeaderboard();
 })
+
+
 
 function addRowToTable(lapData, fastestLap) {
     const lapTime = {
@@ -80,7 +103,7 @@ function addRowToTable(lapData, fastestLap) {
     const tableRow = document.createElement("tr");
     tableRow.addEventListener("click", () => {
         getTimesFromDriver(lapData.driverNumber);
-        modal.classList.toggle('modal-visible');
+        driverModal.classList.toggle('modal-visible');
         blackBg.classList.toggle('blackened-visible');
         displayDataModalTable();
     })
@@ -113,13 +136,19 @@ function addRowToTable(lapData, fastestLap) {
 
 // Check to move to modals js
 blackBg.addEventListener('click', () => {
-    modal.classList.toggle('modal-visible');
-    blackBg.classList.toggle('blackened-visible');
+    hideDriverModal();
 });
 
-closeModal.addEventListener('click', () => {
-    modal.classList.toggle('modal-visible');
-    blackBg.classList.toggle('blackened-visible');
+closeDriverModal.addEventListener('click', () => {
+    hideDriverModal();
+});
+
+blurBg.addEventListener('click', () => {
+    hideDeleteTimeModal();
+});
+
+closeDeleteTimeModal.addEventListener('click', () => {
+    hideDeleteTimeModal();
 });
 
 
@@ -136,7 +165,7 @@ function getTimesFromDriver(driverNumber) {
 }
 
 function displayDataModalTable() {
-    modalTableRoot.innerHTML = "";
+    lapsModalTableRoot.innerHTML = "";
 
     const driverLaps = fetchDriverLaps()
     const modalTitle = document.querySelector(".modal-title");
@@ -183,28 +212,67 @@ function displayDataModalTable() {
                 tyres: modalRows.tyreCell.innerText,
                 driverNumber: lap.driverNumber
             }
-            console.log("before update laptime in modal")
             if (!modalRows.lapTimeCell.isContentEditable) {
                 updateLapTime(updatedLap);
                 displayDataModalTable();
             }
             // updateLapTime(updatedLap);
         })
+        // TODO: Refactor this mess lmao
         deleteIcon.classList.add('fas', 'fa-trash-alt');
         deleteIcon.addEventListener('click', () => {
-            deleteSingleLap(lap.id);
-            displayDataModalTable();
+            deleteTimeModal.classList.toggle('modal-visible');
+            blurBg.classList.toggle('blur-visible');
+            confirmDeleteTime.addEventListener('click', () => {
+                deleteSingleLap(lap.id);
+                hideDriverModal();
+                hideDeleteTimeModal();
+            })
+            cancelDeleteTime.addEventListener('click', () => {
+                hideDeleteTimeModal();
+            })
         })
+
         modalRows.editCell.appendChild(editIcon);
         modalRows.editCell.appendChild(deleteIcon);
-        console.log(modalRows.editCell);
         for (let td in modalRows) {
             modalRow.appendChild(modalRows[td]);
         }
 
-        modalTableRoot.appendChild(modalRow);
+        lapsModalTableRoot.appendChild(modalRow);
     })
 }
+
+function hideDriverModal() {
+    driverModal.classList.remove('modal-visible');
+    blackBg.classList.remove('blackened-visible');
+}
+
+function showDriverModal() {
+    driverModal.classList.add('modal-visible');
+    blackBg.classList.add('blackened-visible');
+}
+
+function hideDeleteTimeModal() {
+    deleteTimeModal.classList.remove('modal-visible');
+    blurBg.classList.remove('blur-visible');
+}
+
+function showDeleteTimeModal() {
+    deleteTimeModal.classList.add('modal-visible');
+    blackBg.classList.add('blur-visible');
+}
+
+function hideDeleteEventModal(){
+    deleteEventModal.classList.remove('modal-visible');
+    blackBg2.classList.remove('blackened-visible');
+}
+
+function showDeleteEventModal(){
+    deleteEventModal.classList.add('modal-visible');
+    blackBg2.classList.add('blackened-visible');
+}
+
 
 function updateLapTime(updatedLap) {
     // find and replace the lap time in local storage
@@ -251,3 +319,84 @@ function deleteSingleLap(lapId) {
     updateLeaderboard();
 }
 
+function handleDeleteEvent(eventId){
+    // delete event with eventId
+    const allEvents = fetchAllEvents();
+    allEvents.forEach(event => {
+        if (event.id === eventId) {
+            allEvents.splice(allEvents.indexOf(event), 1);
+        }
+    })
+    // delete from all laps
+    let allLapTimes = fetchAllLapTimes();
+    allLapTimes = allLapTimes.filter(lap => {
+        return lap.eventId !== eventId
+    })
+
+    // delete from driver laps
+    // const driverLaps = fetchDriverLaps();
+    // for (let lap of driverLaps){
+    //     console.log(lap);
+    //     if (lap.eventId === eventId){
+    //         driverLaps.splice(driverLaps.indexOf(lap), 1);
+    //     }
+    // }
+    // setDriverLaps(driverLaps);
+    setAllLapTimes(allLapTimes);
+    updateLeaderboard();
+    setAllEvents(allEvents);
+    hideDeleteEventModal();
+    window.location.href = "index.html";
+}
+
+function initialize() {
+    // Add tracks to the select menu
+    tracks.forEach(track => {
+        const option = document.createElement("option");
+        option.value = track.name;
+        option.innerText = track.name;
+        tracksSelect.appendChild(option);
+    });
+
+    // Add drivers to the select menu
+    drivers.forEach(driver => {
+        const option = document.createElement("option");
+        option.value = driver.number;
+        option.innerText = `${driver.number} - ${driver.name} - ${driver.team}`;
+        driversSelect.appendChild(option);
+    });
+}
+
+function initializeFromLocalStorage() {
+    let fieldsValue = {
+        driversSelect: "",
+        tracksSelect: "",
+        minutes: "",
+        seconds: "",
+        fractions: "",
+        tyres: ""
+    };
+    if (!localStorage.getItem("fieldsValue")){
+        localStorage.setItem("fieldsValue", JSON.stringify(fieldsValue));
+    }
+    fieldsValue = JSON.parse(localStorage.getItem("fieldsValue"));
+    let form = document.querySelector(".add-time-form");
+    // add event listeners to the form to store the values in local storage on change
+    form.addEventListener("change", function(event) {
+        let fieldsValue = {
+            driversSelect: driversSelect.value,
+            tracksSelect: tracksSelect.value,
+            minutes: minutes.value,
+            seconds: seconds.value,
+            fractions: fractions.value,
+            tyres: tyres.value
+        };
+        localStorage.setItem("fieldsValue", JSON.stringify(fieldsValue));
+    });
+
+    // loop through form elements and set their values to the values in localStorage
+    for (let i = 0; i < form.elements.length - 1; i++) {
+        let element = form.elements[i];
+        element.value = JSON.parse(localStorage.getItem("fieldsValue"))[element.name];
+    }
+}

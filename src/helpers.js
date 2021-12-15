@@ -11,6 +11,26 @@ function setAllLapTimes(allLapTimes) {
     localStorage.setItem('allLapTimes', JSON.stringify(allLapTimes));
 }
 
+
+function fetchCurrentEvent(){
+    let currentEventId = Number(localStorage.getItem('currentEventId'));
+    let allEvents = fetchAllEvents();
+    let currentEvent = allEvents.find(event => event.id === currentEventId);
+    return currentEvent;
+}
+
+function fetchAllEvents(){
+    if (!localStorage.getItem('events')){
+        localStorage.setItem('events', JSON.stringify([]));
+    }
+    let allEventsString = localStorage.getItem('events');
+    return JSON.parse(allEventsString);
+}
+
+function setAllEvents(allEvents){
+    localStorage.setItem('events', JSON.stringify(allEvents));
+}
+
 function fetchFastestLapTimes() {
     if (!localStorage.getItem('fastestLapTimes')){
         localStorage.setItem('fastestLapTimes', JSON.stringify([]));
@@ -35,11 +55,24 @@ function setDriverLaps(driverLaps) {
     localStorage.setItem('driverLaps', JSON.stringify(driverLaps));
 }
 
+function fetchAllLapTimesCurrentEvent(){
+    if (!localStorage.getItem('allLapTimesCurrentEvent')){
+        localStorage.setItem('allLapTimesCurrentEvent', JSON.stringify([]));
+    }
+    let allLapTimes = fetchAllLapTimes();
+    let allLapTimesEvent = getAllLapTimesEvent(allLapTimes, currentEvent.id);
+    setAllLapTimesCurrentEvent(allLapTimesEvent);
+    return allLapTimesEvent;
+}
+
+function setAllLapTimesCurrentEvent(lapTimesEvent){
+    localStorage.setItem('allLapTimesCurrentEvent', JSON.stringify(lapTimesEvent));
+}
+
 // HELPER FUNCTIONS
 function updateLeaderboard(){
-    const allLapTimes = fetchAllLapTimes();
-    const leaderboardTimes = getFastestLapsByDrivers(allLapTimes);
-    console.log(leaderboardTimes,"leaderboardTimes");
+    const allLapTimesCurrentEvent = fetchAllLapTimesCurrentEvent();
+    const leaderboardTimes = getFastestLapsByDrivers(allLapTimesCurrentEvent);
     const fastestLap = getFastestLap(leaderboardTimes);
     leaderboardTableRoot.innerHTML = "";
     leaderboardTimes.forEach(lapData => {
@@ -51,7 +84,6 @@ function getFastestLapsByDrivers(times) {
     const fastestLapTimesByDriver = [];
     const sortedLapTimes = sortTimes(times);
     const drivers = getDrivers(times);
-    console.log(drivers);
     // Get the fastest lap for each driver in order of fastest to slowest
     for (const driver of drivers) {
         const fastestLap = sortedLapTimes.find(lap => lap.driverNumber === driver);
@@ -96,9 +128,9 @@ function getTeamImage(driverNumber) {
     return teamImage;
 }
 
-function setTitle() {
+function setLeaderboardTitle() {
     const title = document.querySelector(".title");
-    title.innerText = eventName.title;
+    title.innerText = currentEvent.title;
 }
 
 function sortTimes(times) {
@@ -149,4 +181,14 @@ function calculateGapToFastestLap(fastestLap, lapTime) {
     const fastestLapTimeInMs = fastestLap.time.minutes * 60 * 1000 + fastestLap.time.seconds * 1000 + fastestLap.time.fractions;
     const lapTimeInMs = lapTime.minutes * 60 * 1000 + lapTime.seconds * 1000 + lapTime.fractions;
     return fastestLapTimeInMs - lapTimeInMs;
+}
+
+function getAllLapTimesEvent(allLapTimes, eventId){
+    let eventLapTimes = [];
+    allLapTimes.forEach(lapTime => {
+        if (lapTime.eventId === eventId) {
+            eventLapTimes.push(lapTime);
+        }
+    });
+    return eventLapTimes;
 }

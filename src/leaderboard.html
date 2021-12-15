@@ -14,23 +14,23 @@
     <script src="https://kit.fontawesome.com/ab015a3fb5.js" crossorigin="anonymous"></script>
     <script src="data.js" defer></script>
     <script src="helpers.js" defer></script>
-    <script src="modals.js" defer></script>
     <script src="leaderboardScript.js" defer></script>
     <title>F1 Leaderboard</title>
 </head>
 <body>
 <main>
     <a href="index.html"><i class="fas fa-chevron-left"></i></a>
+    <i class="fas fa-trash-alt delete-event"></i>
     <header>
         <h1 class="title"></h1>
         <form class="add-time-form">
             <label for="tracks" class="label-title">Track: </label>
-            <select id="tracks" name="tracks" class="select-field select-big tracks">
+            <select id="tracks" name="tracksSelect" class="select-field select-big tracks">
 
             </select>
 
             <label for="drivers" class="label-title">Driver: </label>
-            <select id="drivers" name="drivers" class="select-field select-big drivers">
+            <select id="drivers" name="driversSelect" class="select-field select-big drivers">
 
             </select>
             <label class="label-title">Time: </label>
@@ -76,10 +76,10 @@
 </main>
 
 <div class="blackened"></div>
-<div class="popup-modal">
-    <i class="fas fa-times modal-close"></i>
+<div class="popup-modal modal-hidden driver-modal">
+    <i class="fas fa-times modal-driver-close"></i>
     <h1 class="modal-title">
-        Modal One Title
+
     </h1>
     <div class="popup-modal-content">
         <table class="driver-laps-table">
@@ -94,6 +94,40 @@
             </thead>
             <tbody class="driver-laps-table-root">
         </table>
+    </div>
+</div>
+<div class="blur"></div>
+<div class="popup-modal modal-hidden delete-time-modal">
+    <i class="fas fa-times modal-delete-time-close"></i>
+    <h1>
+        Are you sure?
+    </h1>
+    <div class="popup-modal-content">
+        <p>
+            Are you sure you want to delete?
+        </p>
+        <div class="btn-container">
+
+            <button class="btn-cancel" id="cancel-delete-time-btn">Cancel</button>
+            <button class="btn-submit" id="confirm-delete-time-btn">Delete</button>
+        </div>
+    </div>
+</div>
+<div class="blackened2"></div>
+<div class="popup-modal modal-hidden delete-event-modal">
+    <i class="fas fa-times modal-delete-event-close"></i>
+    <h1>
+        Are you sure?
+    </h1>
+    <div class="popup-modal-content">
+        <p>
+            Are you sure you want to delete this event?
+        </p>
+        <div class="btn-container">
+
+            <button class="btn-cancel" id="cancel-delete-event-btn">Cancel</button>
+            <button class="btn-submit" id="confirm-delete-event-btn">Delete</button>
+        </div>
     </div>
 </div>
 </body>
