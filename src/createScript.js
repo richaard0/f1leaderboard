@@ -26,6 +26,8 @@ createEvent.addEventListener("click", (e) => {
     let currentEventId = event.id;
     localStorage.setItem("events", JSON.stringify(events));
     localStorage.setItem("currentEventId", currentEventId);
+    localStorage.setItem("enterEventField", "");
+    clearFieldsValue();
     window.location.href = "leaderboard.html";
 })
 
@@ -62,6 +64,8 @@ function displayEvents(){
     eventDiv.appendChild(eventDate);
     eventDiv.addEventListener("click", (e) => {
       localStorage.setItem("currentEventId", event.id);
+      localStorage.setItem("enterEventField", "");
+      clearFieldsValue();
       window.location.href = "leaderboard.html";
     });
     rootDiv.appendChild(eventDiv);

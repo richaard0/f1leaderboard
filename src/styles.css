@@ -104,7 +104,7 @@ h1 {
 
 .input-field, .select-field {
     border: 2px solid var(--accent-primary);
-    background: var(--secondary);
+    background: var(--primary);
     padding: 1rem;
     border-radius: 0.5rem;
     color: white;
@@ -114,11 +114,17 @@ h1 {
     outline: none;
     border: 2px solid var(--accent-secondary);
     box-shadow: 0 0 10px 0 var(--accent-primary);
+    background: var(--secondary);
+    color: var(--text);
 }
 
 .input-field::placeholder, .select-field::placeholder {
     color: var(--secondary);
     font-size: 1.3rem;
+}
+
+.input-field:focus-visible::placeholder, .select-field:focus-visible::placeholder{
+    color: var(--primary);
 }
 
 .input-big, .select-big {
@@ -272,4 +278,57 @@ h1 {
     color: var(--text);
     margin: 0;
     background: none;
+}
+
+.titleContainer {
+    position: relative;
+}
+
+
+
+.title {
+    padding: 1rem;
+}
+
+
+.edit-title, .save-title {
+    position: absolute;
+    top: 2rem;
+    right: -4rem;
+    background: none;
+    color: var(--accent-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    display: none;
+}
+
+.edit-track, .save-track {
+    position: absolute;
+    top: 66%;
+    left: 77%;
+    background: none;
+    color: var(--accent-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    display: none;
+}
+
+.isVisible {
+    display: inline;
+}
+
+.tracksSelectContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
 }

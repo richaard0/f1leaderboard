@@ -68,6 +68,15 @@
 /*    pointer-events: all;*/
 /*}*/
 
+/* Refers to the selected track input field*/
+.tracks:disabled {
+    border: none;
+    color: var(--text);
+    opacity: 1;
+    cursor: not-allowed;
+
+}
+
 .modal-driver-close, .modal-delete-event-close, .modal-delete-time-close {
     position: absolute;
     top: 1rem;
@@ -152,7 +161,9 @@
     border: 2px solid var(--accent-secondary);
     border-radius: 10px;
     background: var(--secondary);
+    text-transform: none;
 }
+
 
 .editable:focus, .editable:focus-visible {
     outline: none;
