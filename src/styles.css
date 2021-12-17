@@ -277,6 +277,11 @@ h2 {
     width: 7rem;
 }
 
+.lapNumber, .lapTime, .gap {
+    cursor: pointer;
+    position: relative;
+}
+
 .leaderboard .team {
     width: 12rem;
     text-align: left;
@@ -327,8 +332,6 @@ h2 {
 .titleContainer {
     position: relative;
 }
-
-
 
 .title {
     padding: 1rem;
@@ -512,6 +515,13 @@ input[type=number]::-webkit-inner-spin-button {
     filter: drop-shadow(0 0 5px var(--accent-primary));
 }
 
+.fa-sort {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.5rem;
+}
+
 .editable {
     border: 2px solid var(--accent-secondary);
     border-radius: 10px;
@@ -616,6 +626,21 @@ input[type=number]::-webkit-inner-spin-button {
     border-radius: 0.5em;
     background: var(--secondary);
 }
+
+.invalid-tyre-modal::before {
+    content: "Invalid tyre (S, M, H, I, W)";
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: auto;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 0.5em;
+    background: var(--secondary);
+}
+
 
 
 

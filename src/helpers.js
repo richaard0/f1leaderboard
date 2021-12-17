@@ -710,7 +710,9 @@ function handleEditLapTimeModal(rowCells, lap, editIcon) {
         // must match the regex for lap time (ex: 0:00:000)
         if (rowCells.lapTimeCell.innerText.match(/^[0-9]:[0-5][0-9]:[0-9]{3}$/)) {
             rowCells.lapTimeCell.classList.remove('invalid-lap-time-modal');
-            editIcon.classList.add("isVisible");
+            if (rowCells.tyreCell.innerText.match(/^[S|M|H|I|W]{1}$/)){
+                editIcon.classList.add("isVisible");
+            }
 
         } else {
             rowCells.lapTimeCell.classList.add('invalid-lap-time-modal');
@@ -722,8 +724,10 @@ function handleEditLapTimeModal(rowCells, lap, editIcon) {
         // must match the regex for tyre (ex: S/M/H/I/W)
         if (rowCells.tyreCell.innerText.match(/^[S|M|H|I|W]{1}$/)) {
             rowCells.tyreCell.classList.remove('invalid-tyre-modal');
-            editIcon.classList.add("isVisible");
+            if (rowCells.lapTimeCell.innerText.match(/^[0-9]:[0-5][0-9]:[0-9]{3}$/)){
+                editIcon.classList.add("isVisible");
 
+            }
         } else {
             rowCells.tyreCell.classList.add('invalid-tyre-modal');
             editIcon.classList.remove("isVisible");
