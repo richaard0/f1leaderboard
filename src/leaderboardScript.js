@@ -13,6 +13,8 @@ const editTitleIcon = document.querySelector(".edit-title");
 
 const leaderboardTableRoot = document.querySelector(".table-root");
 
+const title = document.querySelector(".title");
+
 // Modal stuff
 const driverModal = document.querySelector('.driver-modal');
 const blackBg = document.querySelector(".blackened");
@@ -29,42 +31,30 @@ const deleteEventModal = document.querySelector('.delete-event-modal');
 const confirmDeleteEvent = document.querySelector('#confirm-delete-event-btn');
 const cancelDeleteEvent = document.querySelector('#cancel-delete-event-btn');
 
+const lapNumberHeader = document.querySelector('.lapNumber');
+const lapTimeHeader = document.querySelector('.lapTime');
+const gapHeader = document.querySelector('.gap');
+
 let currentLapId = getCurrentLapId();
 let currentEvent = fetchCurrentEvent();
 
 
 // After initial load
 window.addEventListener("load", () => {
-    setLeaderboardTitle();
+    setInitialLeaderboardTitle();
     updateLeaderboard(leaderboardTableRoot);
     initialize();
     initializeFromLocalStorage();
 });
 
-// Refactor this one eventually
-function displayDataModalTable() {
-    // empty modal table
-    lapsModalTableRoot.innerHTML = "";
 
-    const driverLaps = fetchDriverLaps()
-    const driverFastestLap = getFastestLap(driverLaps);
-
-    // set modal table
-    setModalTitle(driverLaps);
-    let lapCount = 0;
-
-    // append every lap to modal table
-    driverLaps.forEach(lap => {
-        lapCount++;
-        addRowToModalTable(lap, lapCount, driverFastestLap);
-    })
-}
 
 function initialize() {
     addTracksToSelect();
     addDriversToSelect();
     setEventListeners();
-
+    setEventListenersValidation();
+    setEventListenersModalTable();
     // if a track is already set, select it then disable the select
     if (currentEvent.track){
         tracksSelect.value = currentEvent.track;

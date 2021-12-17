@@ -1,5 +1,6 @@
 const createEvent = document.querySelector(".create-event-btn");
 const eventInput = document.querySelector(".enter-event");
+const eventTitleContainer = document.querySelector(".event-title-container");
 const rootDiv = document.querySelector(".previous-results");
 let eventInputValue = "";
 let events = [];
@@ -14,6 +15,8 @@ if (!localStorage.getItem("enterEventField")) {
 }
 eventInputValue = JSON.parse(localStorage.getItem("enterEventField"));
 eventInput.value = eventInputValue;
+
+createEvent.disabled = true;
 
 createEvent.addEventListener("click", (e) => {
     // TODO: Add validation (min 5 chars)
@@ -34,40 +37,22 @@ createEvent.addEventListener("click", (e) => {
 eventInput.addEventListener("keyup", (e) => {
     // save to local storage after each key
     localStorage.setItem("enterEventField", JSON.stringify(eventInput.value));
+    if (eventInput.value.length < 5) {
+        eventInput.parentElement.classList.add("tooltip-invalid");
+        eventInput.parentElement.classList.add("title-invalid");
+        createEvent.disabled = true;
+    } else {
+        eventInput.parentElement.classList.remove("tooltip-invalid");
+        eventInput.parentElement.classList.remove("title-invalid");
+        createEvent.disabled = false;
+
+    }
 })
+
+// eventInput.addEventListener("keydown", (e) => {
+//     // if below 5 chars, display invalid tooltip
+//
+// })
 
 displayEvents();
 
-function getNextId() {
-  const events = JSON.parse(localStorage.getItem("events"));
-  console.log(events);
-  let maxId = 0;
-  events.forEach((event) => {
-    if (event.id > maxId) {
-      maxId = event.id;
-    }
-  });
-  return maxId + 1;
-}
-
-function displayEvents(){
-  const events = JSON.parse(localStorage.getItem("events"));
-  events.forEach((event) => {
-    let eventDiv = document.createElement("div");
-    eventDiv.classList.add("event");
-    eventDiv.setAttribute("id", event.id);
-    let eventTitle = document.createElement("h3");
-    eventTitle.innerText = event.title;
-    eventDiv.appendChild(eventTitle);
-    let eventDate = document.createElement("p");
-    eventDate.innerText = event.date;
-    eventDiv.appendChild(eventDate);
-    eventDiv.addEventListener("click", (e) => {
-      localStorage.setItem("currentEventId", event.id);
-      localStorage.setItem("enterEventField", "");
-      clearFieldsValue();
-      window.location.href = "leaderboard.html";
-    });
-    rootDiv.appendChild(eventDiv);
-  });
-}

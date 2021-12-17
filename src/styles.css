@@ -7,6 +7,27 @@
     --text: #FFF;
 }
 
+/* Define animation that goes from top to bottom */
+@keyframes slideDown {
+    0% {
+        transform: translate(-50%, -150%);
+    }
+    100% {
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes slideUpTooltip {
+    0% {
+        top: 5.3rem;
+        opacity: 0;
+    }
+    100% {
+        top: 4.3rem;
+        opacity: 1;
+    }
+}
+
 html, body {
     height: 100%;
 }
@@ -32,6 +53,13 @@ header {
 }
 
 h1 {
+    color: var(--text);
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+h2 {
     color: var(--text);
     text-transform: uppercase;
     font-size: 1.5rem;
@@ -91,6 +119,7 @@ h1 {
     align-items: center;
     gap: 3rem;
     width: 100%;
+    padding: 1rem;
 }
 
 .add-time-form {
@@ -108,6 +137,7 @@ h1 {
     padding: 1rem;
     border-radius: 0.5rem;
     color: white;
+    position: relative;
 }
 
 .input-field:focus-visible, .select-field:focus-visible {
@@ -179,6 +209,19 @@ h1 {
     font-weight: bold;
     font-style: italic;
     transition: box-shadow 0.3s ease;
+    margin-top: 1rem;
+}
+
+.btn-submit:disabled{
+    background: var(--secondary);
+    color: var(--text);
+    cursor: not-allowed;
+    opacity: 0.7;
+    transition: all ease 0.3s;
+}
+
+.btn-submit:disabled:hover {
+    box-shadow: none;
 }
 
 .btn-cancel {
@@ -191,6 +234,7 @@ h1 {
     text-transform: uppercase;
     font-weight: bold;
     font-style: italic;
+    margin-top: 1rem;
     transition: all ease 0.3s;
 }
 
@@ -229,7 +273,7 @@ h1 {
     width: 5rem;
 }
 
-.leaderboard .number {
+.leaderboard .lapNumber {
     width: 7rem;
 }
 
@@ -318,7 +362,7 @@ h1 {
 }
 
 .isVisible {
-    display: inline;
+    display: inline !important;
 }
 
 .tracksSelectContainer {
@@ -329,6 +373,275 @@ h1 {
     position: relative;
 }
 
+/* hide up and down arrows from */
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
+
+.popup-modal {
+    position: fixed;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+    /*transform: translate(-50%, -150%);*/
+    transform: translate(-50%, -50%);
+    background: var(--primary);
+    display: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    /*animation: slideUp 0.5s ease-in-out;*/
+}
+
+.driver-modal {
+    width: 50rem;
+    z-index: 15;
+}
+
+.delete-event-modal, .delete-time-modal {
+    width: 20rem;
+    z-index: 20;
+}
+
+.delete-event-modal {
+    width: 30rem;
+}
+
+.modal-visible {
+    display: block;
+    animation: slideDown ease 0.5s;
+}
+
+.popup-modal *{
+    background: inherit;
+}
+
+.popup-modal h1 {
+    /*color: white;*/
+    margin-bottom: 4rem;
+}
+
+/* Refers to the selected track input field*/
+.tracks:disabled {
+    border: 1px solid var(--secondary);
+    color: var(--text);
+    opacity: 1;
+    cursor: not-allowed;
+
+}
+
+.modal-driver-close, .modal-delete-event-close, .modal-delete-time-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 2rem;
+    color: var(--accent-primary);
+    background: none;
+    transition:  all ease 0.3s;
+    /*pointer-events: none;*/
+}
+
+.modal-close:hover, .modal-delete-event-close:hover, .modal-delete-time-close:hover {
+    filter: drop-shadow(0 0 5px var(--accent-primary));
+}
+
+.blackened, .blackened2 {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    backdrop-filter: blur(5px);
+}
+
+.blur {
+    background: rgba(0, 0, 0, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 16;
+    display: none;
+    backdrop-filter: blur(5px);
+}
+
+.blackened-visible, .blur-visible {
+    display: block;
+}
+
+.driver-laps-table {
+    border-spacing: 0;
+    border: none;
+    text-align: center;
+    width: 85%;
+    margin: 0 auto;
+}
+
+.driver-laps-table thead {
+    background: var(--accent-primary);
+}
+
+.driver-laps-table th {
+    min-width: 4rem;
+}
+
+.driver-laps-table i {
+    margin-right: 1rem;
+}
+
+.driver-laps-table td{
+    height: 2rem;
+}
+
+.fa-edit, .fa-check, .fa-trash-alt {
+    cursor: pointer;
+    background: none;
+    transition: filter ease 0.3s, color ease 0.3s;
+    display: none;
+}
+
+.fa-edit:hover, .fa-check:hover, .fa-trash-alt:hover {
+    color: var(--accent-primary);
+    filter: drop-shadow(0 0 5px var(--accent-primary));
+}
+
+.editable {
+    border: 2px solid var(--accent-secondary);
+    border-radius: 10px;
+    background: var(--secondary);
+    text-transform: none;
+    position: relative;
+}
+
+
+.editable:focus, .editable:focus-visible {
+    outline: none;
+}
+
+#confirm-delete-time-btn, #confirm-delete-event-btn {
+    background: linear-gradient(to bottom right, var(--accent-primary), var(--accent-secondary));
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.minutesContainer, .secondsContainer, .fractionsContainer, .tyresContainer {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+.tooltip-invalid input{
+    border: 2px solid var(--text);
+}
+
+.tooltip-invalid::after{
+    /*content: "Entrez un nombre valide";*/
+    text-align: center;
+    position: absolute;
+    top: 4.3rem;
+    right: 50%;
+    transform: translateX(50%);
+    width: 200px;
+    height: auto;
+    padding: 0.5rem;
+    color: white;
+    font-size: 0.8rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+    background: var(--secondary);
+    animation: slideUpTooltip ease 0.3s;
+}
+
+.title-invalid::after  {
+    color: var(--text);
+    content: "Minimum de 5 caractères";
+}
+
+.event-title-container{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background: none;
+}
+
+.event-body {
+    background: none;
+    font-style: italic;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.event-body p {
+    font-family: 'Source Code Pro', monospace;
+}
+
+.event-body p:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.invalid-lap-time-modal::before {
+    content: "Invalid lap time";
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: auto;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 0.5em;
+    background: var(--secondary);
+}
+
+
+
+/*.minutes-invalid::after{*/
+/*    content: "Entrez un nombre de minutes entre 0 et 9";*/
+/*}*/
+
+/*.seconds-invalid::after{*/
+/*    content: "Entrez un nombre de minutes entre 0 et 59";*/
+/*}*/
+
+/*.fractions-invalid::after{*/
+/*    content: "Entrez un nombre de minutes entre 0 et 999";*/
+/*}*/
+
+/*.tooltip-invalid:before {*/
+/*    content:"";*/
+/*    position: absolute;*/
+/*    top: 3.8rem;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 2px;*/
+/*    background: var(--text);*/
+/*    z-index: 20;*/
+/*}*/
+
+/*.tooltip-invalid input:focus-visible {*/
+/*    border: 2px solid var(--text);*/
+/*}*/

@@ -2,7 +2,7 @@
 // LOCAL STORAGE CRUD FUNCTIONS
 // ----------------------------
 function fetchAllLapTimes() {
-    if (!localStorage.getItem('allLapTimes')){
+    if (!localStorage.getItem('allLapTimes')) {
         localStorage.setItem('allLapTimes', JSON.stringify([]));
     }
     let allLapTimesString = localStorage.getItem('allLapTimes');
@@ -13,13 +13,13 @@ function setAllLapTimes(allLapTimes) {
     localStorage.setItem('allLapTimes', JSON.stringify(allLapTimes));
 }
 
-function fetchCurrentEvent(){
+function fetchCurrentEvent() {
     let currentEventId = Number(localStorage.getItem('currentEventId'));
     let allEvents = fetchAllEvents();
     return allEvents.find(event => event.id === currentEventId);
 }
 
-function setCurrentEvent(event){
+function setCurrentEvent(event) {
     let allEvents = fetchAllEvents();
     let currentEventId = event.id;
     // replace the current event with the new event
@@ -28,20 +28,20 @@ function setCurrentEvent(event){
     setAllEvents(allEvents);
 }
 
-function fetchAllEvents(){
-    if (!localStorage.getItem('events')){
+function fetchAllEvents() {
+    if (!localStorage.getItem('events')) {
         localStorage.setItem('events', JSON.stringify([]));
     }
     let allEventsString = localStorage.getItem('events');
     return JSON.parse(allEventsString);
 }
 
-function setAllEvents(allEvents){
+function setAllEvents(allEvents) {
     localStorage.setItem('events', JSON.stringify(allEvents));
 }
 
 function fetchFastestLapTimes() {
-    if (!localStorage.getItem('fastestLapTimes')){
+    if (!localStorage.getItem('fastestLapTimes')) {
         localStorage.setItem('fastestLapTimes', JSON.stringify([]));
     }
     let fastestLapTimesString = localStorage.getItem('fastestLapTimes');
@@ -53,7 +53,7 @@ function setFastestLapTimes(fastestLapTimes) {
 }
 
 function fetchDriverLaps() {
-    if (!localStorage.getItem('driverLaps')){
+    if (!localStorage.getItem('driverLaps')) {
         localStorage.setItem('driverLaps', JSON.stringify([]));
     }
     let driverLapsString = localStorage.getItem('driverLaps');
@@ -64,8 +64,8 @@ function setDriverLaps(driverLaps) {
     localStorage.setItem('driverLaps', JSON.stringify(driverLaps));
 }
 
-function fetchAllLapTimesCurrentEvent(){
-    if (!localStorage.getItem('allLapTimesCurrentEvent')){
+function fetchAllLapTimesCurrentEvent() {
+    if (!localStorage.getItem('allLapTimesCurrentEvent')) {
         localStorage.setItem('allLapTimesCurrentEvent', JSON.stringify([]));
     }
     let allLapTimes = fetchAllLapTimes();
@@ -74,7 +74,7 @@ function fetchAllLapTimesCurrentEvent(){
     return allLapTimesEvent;
 }
 
-function setAllLapTimesCurrentEvent(lapTimesEvent){
+function setAllLapTimesCurrentEvent(lapTimesEvent) {
     localStorage.setItem('allLapTimesCurrentEvent', JSON.stringify(lapTimesEvent));
 }
 
@@ -86,6 +86,15 @@ function setTimesFromDriver(driverNumber) {
             driverLaps.push(lapData);
         }
     })
+    if (localStorage.getItem("lapOrder") === "asc") {
+        driverLaps.sort(function (a, b) {
+            return a.id - b.id
+        });
+    } else {
+        driverLaps.sort(function (a, b) {
+            return b.id - a.id
+        });
+    }
     localStorage.setItem('driverLaps', JSON.stringify(driverLaps));
 }
 
@@ -94,7 +103,7 @@ function setTimesFromDriver(driverNumber) {
 // HELPER FUNCTIONS
 // ----------------
 
-function setEventListeners(){
+function setEventListeners() {
     addButton.addEventListener("click", handleAddTime)
 
     editTitleIcon.addEventListener("click", handleEditLeaderboardTitle);
@@ -118,11 +127,85 @@ function setEventListeners(){
 
     blackBg.addEventListener('click', hideDriverModal);
 
-    blurBg.addEventListener('click',  handleCancelDeleteTimeModal);
+    blurBg.addEventListener('click', handleCancelDeleteTimeModal);
 
-    closeDriverModal.addEventListener('click',  hideDriverModal);
+    closeDriverModal.addEventListener('click', hideDriverModal);
 
     closeDeleteTimeModal.addEventListener('click', handleCancelDeleteTimeModal);
+}
+
+function setEventListenersValidation() {
+    minutes.addEventListener("keydown", (e) => {
+        // if key is tab, ignore it
+        if (e.keyCode === 9) {
+            return;
+        }
+        checkInputFieldLength(minutes, 1);
+    })
+
+    seconds.addEventListener("keydown", (e) => {
+        // if key is tab, ignore it
+        if (e.keyCode === 9) {
+            return;
+        }
+        // prevent user from entering non-numeric characters
+        checkInputFieldLength(seconds, 2);
+    })
+
+    seconds.addEventListener("keyup", (e) => {
+        // if key is tab, ignore it
+        if (e.keyCode === 9) {
+            return;
+        }
+        checkSeconds(seconds);
+    })
+
+    fractions.addEventListener("keydown", (e) => {
+        // if key is tab, ignore it
+        if (e.keyCode === 9) {
+            return;
+        }
+        // prevent user from entering non-numeric characters
+        checkInputFieldLength(fractions, 3);
+    })
+
+    title.addEventListener("keyup", (e) => {
+        const saveIcon = document.querySelector('.save-title');
+        if (title.innerText.length < 5) {
+            title.classList.add("tooltip-invalid");
+            title.classList.add("title-invalid");
+            saveIcon.classList.remove("isVisible");
+        } else {
+            title.classList.remove("tooltip-invalid");
+            title.classList.remove("title-invalid");
+            saveIcon.classList.add("isVisible");
+        }
+
+    })
+}
+
+function setEventListenersModalTable() {
+    lapNumberHeader.addEventListener("click", sortTimesByLapNumberModal);
+    lapTimeHeader.addEventListener("click", sortTimesByLapTimesModal);
+    gapHeader.addEventListener("click", sortTimesByLapTimesModal);
+}
+
+function checkInputFieldLength(input, max) {
+    let errors = true;
+    while (errors) {
+        if (input.value.length >= max) {
+            input.value = input.value.slice(0, -Math.abs((max - 2)));
+        } else {
+            errors = false;
+        }
+    }
+}
+
+function checkSeconds(input) {
+    // prevent first digit from being higher than 5
+    if (input.value.length === 2 && input.value[0] > 5) {
+        input.value = input.value[0];
+    }
 }
 
 function getHelmetImage(driverNumber) {
@@ -161,7 +244,7 @@ function getDriversFromLaptimes(times) {
     return drivers;
 }
 
-function getLapCountForDriver(driverNumber){
+function getLapCountForDriver(driverNumber) {
     let allLapTimes = fetchAllLapTimes();
     let lapCount = 0;
     allLapTimes.forEach(time => {
@@ -172,7 +255,7 @@ function getLapCountForDriver(driverNumber){
     return lapCount;
 }
 
-function getCurrentLapId(){
+function getCurrentLapId() {
     let allLapTimes = fetchAllLapTimes();
     let lapId = 0;
     allLapTimes.forEach(lapTime => {
@@ -183,7 +266,7 @@ function getCurrentLapId(){
     return lapId;
 }
 
-function getAllLapTimesEvent(allLapTimes, eventId){
+function getAllLapTimesEvent(allLapTimes, eventId) {
     let eventLapTimes = [];
     allLapTimes.forEach(lapTime => {
         if (lapTime.eventId === eventId) {
@@ -239,7 +322,7 @@ function findAndReplaceLap(updatedLap, laps) {
     })
 }
 
-function createLeaderboardRow(){
+function createLeaderboardRow() {
     return {
         driverNumberCell: document.createElement("td"),
         driverHelmetCell: document.createElement("td"),
@@ -253,7 +336,7 @@ function createLeaderboardRow(){
     }
 }
 
-function createModalRow(){
+function createModalRow() {
     return {
         lapCountCell: document.createElement('td'),
         lapTimeCell: document.createElement('td'),
@@ -283,10 +366,18 @@ function getFastestLapsByDrivers(times) {
 }
 
 function sortTimesByFastest(times) {
-    const sortedTimes = [ ...times ];
+    const sortedTimes = [...times];
     return sortedTimes.sort((a, b) => {
         return ((a.time.minutes * 60 * 1000) + (a.time.seconds * 1000) + a.time.fractions) -
             ((b.time.minutes * 60 * 1000) + (b.time.seconds * 1000) + b.time.fractions);
+    });
+}
+
+function sortTimesBySlowest(times) {
+    const sortedTimes = [...times];
+    return sortedTimes.sort((a, b) => {
+        return ((b.time.minutes * 60 * 1000) + (b.time.seconds * 1000) + b.time.fractions) -
+            ((a.time.minutes * 60 * 1000) + (a.time.seconds * 1000) + a.time.fractions);
     });
 }
 
@@ -329,7 +420,10 @@ function addRowToTable(lapData, fastestLap, tableRoot) {
     row.driverNameCell.innerText = getDriverName(lapData.driverNumber);
     row.driverTeamCell.innerText = getDriverTeam(lapData.driverNumber);
     row.teamImageCell.appendChild(getTeamImage(lapData.driverNumber));
-    row.timeCell.innerText = `${lapData.time.minutes}:${lapData.time.seconds}:${lapData.time.fractions}`;
+    row.timeCell.innerText = `${lapData.time.minutes}:${(lapData.time.seconds).toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+    })}:${(lapData.time.fractions).toLocaleString('en-US', {minimumIntegerDigits: 3, useGrouping: false})}`;
     row.gapCell.innerText = calculateGapToFastestLap(fastestLap, lapTime) === 0 ? "---" : `+${((calculateGapToFastestLap(fastestLap, lapTime) / 1000) * -1).toFixed(3)}`;
     row.tyreCell.innerText = lapData.tyres;
     row.lapCell.innerText = getLapCountForDriver(lapData.driverNumber);
@@ -343,12 +437,11 @@ function addRowToTable(lapData, fastestLap, tableRoot) {
     tableRoot.appendChild(tableRow);
 }
 
-function setLeaderboardTitle() {
-    const title = document.querySelector(".title");
+function setInitialLeaderboardTitle() {
     title.innerText = currentEvent.title;
 }
 
-function updateLeaderboard(tableRoot){
+function updateLeaderboard(tableRoot) {
     const allLapTimesCurrentEvent = fetchAllLapTimesCurrentEvent();
     const leaderboardTimes = getFastestLapsByDrivers(allLapTimesCurrentEvent);
     const fastestLap = getFastestLap(leaderboardTimes);
@@ -358,12 +451,12 @@ function updateLeaderboard(tableRoot){
     })
 }
 
-function handleEditLeaderboardTitle(){
+function handleEditLeaderboardTitle() {
     const title = document.querySelector(".title");
     editTitleIcon.classList.remove("isVisible");
     title.classList.add("editable");
-    const saveIcon = document.createElement("i");
-    saveIcon.classList.add("fas", "fa-save", "save-title", "isVisible");
+    const saveIcon = document.querySelector(".save-title");
+    saveIcon.classList.add("isVisible");
     editTitleIcon.parentNode.appendChild(saveIcon);
     title.contentEditable = true;
     title.focus();
@@ -376,7 +469,7 @@ function handleEditLeaderboardTitle(){
     });
 }
 
-function disableTrackSelectionField(){
+function disableTrackSelectionField() {
     tracksSelect.disabled = true;
     // add edit icon if disabled
     let editIcon = document.createElement("i");
@@ -400,7 +493,7 @@ function disableTrackSelectionField(){
     });
 }
 
-function clearFieldsValue(){
+function clearFieldsValue() {
     const fieldsString = localStorage.getItem("fieldsValue");
     const fields = JSON.parse(fieldsString);
     fields.minutes = "";
@@ -411,7 +504,7 @@ function clearFieldsValue(){
     localStorage.setItem("fieldsValue", JSON.stringify(fields));
 }
 
-function updateFields(fieldsValue){
+function updateFields(fieldsValue) {
     driversSelect.value = fieldsValue.driversSelect;
     minutes.value = fieldsValue.minutes;
     seconds.value = fieldsValue.seconds;
@@ -419,13 +512,13 @@ function updateFields(fieldsValue){
     tyres.value = fieldsValue.tyres;
 }
 
-function addEventListenersToForm(form, type, fieldsValue){
+function addEventListenersToForm(form, type, fieldsValue) {
     form.addEventListener(type, () => {
         setFieldValues(fieldsValue);
     })
 }
 
-function setFieldValues(fieldsValue){
+function setFieldValues(fieldsValue) {
     fieldsValue = {
         driversSelect: driversSelect.value,
         minutes: minutes.value,
@@ -436,7 +529,7 @@ function setFieldValues(fieldsValue){
     localStorage.setItem("fieldsValue", JSON.stringify(fieldsValue));
 }
 
-function getLapTimeDetails(){
+function getLapTimeDetails() {
     return {
         id: ++currentLapId,
         driverNumber: Number(driversSelect.value),
@@ -450,7 +543,7 @@ function getLapTimeDetails(){
     }
 }
 
-function handleAddTime(event){
+function handleAddTime(event) {
     event.preventDefault();
     let allLapTimes = fetchAllLapTimes();
     let currentEvent = fetchCurrentEvent();
@@ -473,60 +566,22 @@ function handleAddTime(event){
 }
 
 
-
 // ---------------
 // MODAL FUNCTIONS
 // ---------------
-
-function setModalTitle(driverLaps){
-    const modalTitle = document.querySelector(".modal-title");
-    modalTitle.innerText = `${driverLaps[0].driverNumber} - ${getDriverName(driverLaps[0].driverNumber)} - ${getDriverTeam(driverLaps[0].driverNumber)}`;
-}
-
-function hideDriverModal() {
-    driverModal.classList.remove('modal-visible');
-    blackBg.classList.remove('blackened-visible');
-}
-
-function showDriverModal() {
-    driverModal.classList.add('modal-visible');
-    blackBg.classList.add('blackened-visible');
-}
-
-function handleCancelDeleteTimeModal() {
-    deleteTimeModal.classList.remove('modal-visible');
-    blurBg.classList.remove('blur-visible');
-}
-
-function showDeleteTimeModal() {
-    deleteTimeModal.classList.add('modal-visible');
-    blurBg.classList.add('blur-visible');
-}
-
-function hideDeleteEventModal(){
-    deleteEventModal.classList.remove('modal-visible');
-    blackBg2.classList.remove('blackened-visible');
-}
-
-function showDeleteEventModal(){
-    deleteEventModal.classList.add('modal-visible');
-    blackBg2.classList.add('blackened-visible');
-}
-
-function handleDeleteTimeModal(lapId){
-    deleteSingleLap(lapId, leaderboardTableRoot);
-    handleCancelDeleteTimeModal();
-    // hideDriverModal();
-    displayDataModalTable();
-}
-
-function addRowToModalTable(lap, lapCount, driverFastestLap){
+function addRowToModalTable(lap, lapCount, driverFastestLap) {
     const modalRow = document.createElement('tr');
     // setup data for each row
     const rowCells = createModalRow();
 
     rowCells.lapCountCell.innerText = lapCount;
-    rowCells.lapTimeCell.innerText = `${lap.time.minutes}:${lap.time.seconds}:${lap.time.fractions}`;
+    rowCells.lapTimeCell.innerText = `${lap.time.minutes}:${lap.time.seconds.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+    })}:${lap.time.fractions.toLocaleString('en-US', {
+        minimumIntegerDigits: 3,
+        useGrouping: false
+    })}`;
     rowCells.lapTimeCell.contentEditable = "false"
     rowCells.gapCell.innerText = calculateGapToFastestLap(driverFastestLap, lap.time) === 0 ? "---" : `+${((calculateGapToFastestLap(driverFastestLap, lap.time) / 1000) * -1).toFixed(3)}`;
     rowCells.tyreCell.innerText = lap.tyres;
@@ -551,13 +606,92 @@ function addRowToModalTable(lap, lapCount, driverFastestLap){
     lapsModalTableRoot.appendChild(modalRow);
 }
 
-function handleEditLapTimeModal(rowCells, lap){
+function displayDataModalTable() {
+    if (!localStorage.getItem("lapOrder")) {
+        localStorage.setItem("lapOrder", "asc");
+    }
+    // empty modal table
+    lapsModalTableRoot.innerHTML = "";
+
+    const driverLaps = fetchDriverLaps()
+    const driverFastestLap = getFastestLap(driverLaps);
+
+    // set modal table
+    setModalTitle(driverLaps);
+
+    if (localStorage.getItem("lapOrder") === "asc") {
+        let lapCount = 0;
+        // append every lap to modal table
+        driverLaps.forEach(lap => {
+            lapCount++;
+            addRowToModalTable(lap, lapCount, driverFastestLap);
+        })
+    } else if (localStorage.getItem("lapOrder") === "desc") {
+        let lapCount = driverLaps.length + 1;
+        // append every lap to modal table
+        driverLaps.forEach(lap => {
+            lapCount--;
+            addRowToModalTable(lap, lapCount, driverFastestLap);
+        })
+    } else if (localStorage.getItem("lapOrder") === "timeAsc" || (localStorage.getItem("lapOrder") === "timeDesc")) {
+        let allLapIds = fetchAllLapIds(driverLaps);
+        driverLaps.forEach(lap => {
+            let lapTimeId = lap.id;
+            let lapTimeIndex = allLapIds.indexOf(lapTimeId) + 1;
+            addRowToModalTable(lap, lapTimeIndex, driverFastestLap);
+        })
+    }
+
+}
+
+function setModalTitle(driverLaps) {
+    const modalTitle = document.querySelector(".modal-title");
+    modalTitle.innerText = `${driverLaps[0].driverNumber} - ${getDriverName(driverLaps[0].driverNumber)} - ${getDriverTeam(driverLaps[0].driverNumber)}`;
+}
+
+function hideDriverModal() {
+    driverModal.classList.remove('modal-visible');
+    blackBg.classList.remove('blackened-visible');
+}
+
+function showDriverModal() {
+    driverModal.classList.add('modal-visible');
+    blackBg.classList.add('blackened-visible');
+}
+
+function handleCancelDeleteTimeModal() {
+    deleteTimeModal.classList.remove('modal-visible');
+    blurBg.classList.remove('blur-visible');
+}
+
+function showDeleteTimeModal() {
+    deleteTimeModal.classList.add('modal-visible');
+    blurBg.classList.add('blur-visible');
+}
+
+function hideDeleteEventModal() {
+    deleteEventModal.classList.remove('modal-visible');
+    blackBg2.classList.remove('blackened-visible');
+}
+
+function showDeleteEventModal() {
+    deleteEventModal.classList.add('modal-visible');
+    blackBg2.classList.add('blackened-visible');
+}
+
+function handleDeleteTimeModal(lapId) {
+    deleteSingleLap(lapId, leaderboardTableRoot);
+    handleCancelDeleteTimeModal();
+    // hideDriverModal();
+    displayDataModalTable();
+}
+
+function handleEditLapTimeModal(rowCells, lap, editIcon) {
     rowCells.lapTimeCell.isContentEditable ? rowCells.lapTimeCell.contentEditable = "false" : rowCells.lapTimeCell.contentEditable = "true";
     rowCells.lapTimeCell.classList.toggle('editable');
     rowCells.tyreCell.isContentEditable ? rowCells.tyreCell.contentEditable = "false" : rowCells.tyreCell.contentEditable = "true";
     rowCells.tyreCell.classList.toggle('editable');
     // update the lap time in the driverLaps array
-    // TODO: add validation later
     let updatedLap = {
         id: lap.id,
         time: {
@@ -572,14 +706,70 @@ function handleEditLapTimeModal(rowCells, lap){
         updateLapTime(updatedLap, leaderboardTableRoot);
         displayDataModalTable();
     }
-}à
+    rowCells.lapTimeCell.addEventListener("keyup", () => {
+        // must match the regex for lap time (ex: 0:00:000)
+        if (rowCells.lapTimeCell.innerText.match(/^[0-9]:[0-5][0-9]:[0-9]{3}$/)) {
+            rowCells.lapTimeCell.classList.remove('invalid-lap-time-modal');
+            editIcon.classList.add("isVisible");
+
+        } else {
+            rowCells.lapTimeCell.classList.add('invalid-lap-time-modal');
+            editIcon.classList.remove("isVisible");
+        }
+    })
+
+    rowCells.tyreCell.addEventListener("keyup", () => {
+        // must match the regex for tyre (ex: S/M/H/I/W)
+        if (rowCells.tyreCell.innerText.match(/^[S|M|H|I|W]{1}$/)) {
+            rowCells.tyreCell.classList.remove('invalid-tyre-modal');
+            editIcon.classList.add("isVisible");
+
+        } else {
+            rowCells.tyreCell.classList.add('invalid-tyre-modal');
+            editIcon.classList.remove("isVisible");
+        }
+    })
+}
+
+function sortTimesByLapTimesModal() {
+    let driverLaps = fetchDriverLaps();
+    // sort by lap time
+    if (localStorage.getItem("lapOrder") === "asc" || localStorage.getItem("lapOrder") === "desc") {
+        localStorage.setItem("lapOrder", "timeAsc");
+    } else if (localStorage.getItem("lapOrder") === "timeAsc") {
+        localStorage.setItem("lapOrder", "timeDesc");
+    } else {
+        localStorage.setItem("lapOrder", "timeAsc");
+    }
+
+    if (localStorage.getItem("lapOrder") === "timeAsc") {
+        driverLaps = sortTimesByFastest(driverLaps);
+    } else {
+        driverLaps = sortTimesBySlowest(driverLaps);
+    }
+    setDriverLaps(driverLaps);
+    displayDataModalTable();
+}
+
+function sortTimesByLapNumberModal() {
+    let driverLaps = fetchDriverLaps();
+    if (localStorage.getItem("lapOrder") === "asc") {
+        localStorage.setItem("lapOrder", "desc");
+
+    } else {
+        localStorage.setItem("lapOrder", "asc");
+    }
+    driverLaps.reverse();
+    setDriverLaps(driverLaps);
+    displayDataModalTable();
+}
 
 
 // ------
 // OTHERS
 // ------
 
-function handleDeleteEvent(eventId){
+function handleDeleteEvent(eventId) {
     // delete event with eventId
     const allEvents = fetchAllEvents();
     allEvents.forEach(event => {
@@ -600,22 +790,22 @@ function handleDeleteEvent(eventId){
     window.location.href = "index.html";
 }
 
-function createEditIcon(rowCells, lap){
+function createEditIcon(rowCells, lap) {
     let editIcon = document.createElement('i');
     document.createElement('i');
-    editIcon.classList.add('fas', 'fa-edit');
+    editIcon.classList.add('fas', 'fa-edit', "isVisible");
     editIcon.addEventListener('click', function () { // not using arrow function to access "this"
         // make laptime and tyre cells editable
-        handleEditLapTimeModal(rowCells, lap);
+        handleEditLapTimeModal(rowCells, lap, editIcon);
         this.classList.toggle('fa-edit');
         this.classList.toggle('fa-check');
     })
     return editIcon;
 }
 
-function createDeleteIcon(lapId){
+function createDeleteIcon(lapId) {
     let deleteIcon = document.createElement('i');
-    deleteIcon.classList.add('fas', 'fa-trash-alt');
+    deleteIcon.classList.add('fas', 'fa-trash-alt', "isVisible");
     deleteIcon.addEventListener('click', () => {
         showDeleteTimeModal();
         confirmDeleteTime.addEventListener('click', () => {
@@ -627,4 +817,96 @@ function createDeleteIcon(lapId){
         })
     })
     return deleteIcon;
+}
+
+// TODO: Refactor this function
+function displayEvents() {
+    const events = JSON.parse(localStorage.getItem("events"));
+    events.forEach((event) => {
+
+        let eventDiv = document.createElement("div");
+        eventDiv.classList.add("event");
+        eventDiv.setAttribute("id", event.id);
+        let eventHeader = document.createElement('div');
+        eventHeader.classList.add('event-header');
+        let eventTitle = document.createElement("h3");
+        eventTitle.innerText = event.title;
+        eventHeader.appendChild(eventTitle);
+        let eventDate = document.createElement("p");
+        eventDate.innerText = event.date;
+        eventHeader.appendChild(eventDate);
+        eventDiv.appendChild(eventHeader);
+
+        let eventBody = document.createElement('div');
+        eventBody.classList.add('event-body');
+        let ranking = document.createElement("p");
+        ranking.innerText = "Ranking";
+        eventBody.appendChild(ranking);
+
+        // get all the lap times for this event
+        let allLapTimes = fetchAllLapTimes();
+        let eventLapTimes = allLapTimes.filter(lap => {
+            return lap.eventId === event.id
+        });
+        let fastestEventLaps = getFastestLapsByDrivers(eventLapTimes);
+        // get the top 3 lap times for the event
+        let top3LapTimes = fastestEventLaps.sort((a, b) => {
+            return a.time.minutes * 60 + a.time.seconds + a.time.fractions / 100 - (b.time.minutes * 60 + b.time.seconds + b.time.fractions / 100)
+        }).slice(0, 3);
+        // then display the top 3 lap times
+        for (let i = 0; i < top3LapTimes.length; i++) {
+            const lap = top3LapTimes[i];
+            let lapTime = document.createElement("p");
+            // get the driver name
+            let driverName = getDriverName(lap.driverNumber);
+            // position, then driver name, then lap time
+            // get the index of for loopç
+            // add a minimum space between the name and the lap time
+            lapTime.innerHTML = `${i + 1}. ${driverName}  ${leftPad(lap.time.minutes.toString(), "&nbsp;", 22 - driverName.length)}:${lap.time.seconds.toLocaleString('en-US', {
+                minimumIntegerDigits: 2,
+                useGrouping: false
+            })}:${lap.time.fractions.toLocaleString('en-US', {
+                minimumIntegerDigits: 3,
+                useGrouping: false
+            })}`;
+            eventBody.appendChild(lapTime);
+        }
+        eventDiv.appendChild(eventBody);
+
+        eventDiv.addEventListener("click", (e) => {
+            localStorage.setItem("currentEventId", event.id);
+            localStorage.setItem("enterEventField", "");
+            // clearFieldsValue();
+            window.location.href = "leaderboard.html";
+        });
+        rootDiv.appendChild(eventDiv);
+    });
+}
+
+function getNextId() {
+    const events = JSON.parse(localStorage.getItem("events"));
+    console.log(events);
+    let maxId = 0;
+    events.forEach((event) => {
+        if (event.id > maxId) {
+            maxId = event.id;
+        }
+    });
+    return maxId + 1;
+}
+
+// padStart not working with spaces??
+function leftPad(string, fillChar, amount) {
+    return amount - string.length > 0 ? fillChar.repeat(amount - string.length) + string : string;
+}
+
+function fetchAllLapIds(lapTimes) {
+    let lapIds = [];
+    lapTimes.forEach((lap) => {
+        lapIds.push(lap.id);
+    });
+    lapIds.sort((a, b) => {
+        return a - b;
+    });
+    return lapIds;
 }
