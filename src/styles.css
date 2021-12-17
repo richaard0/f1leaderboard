@@ -263,11 +263,23 @@ h2 {
     border-collapse: collapse;
     table-layout: fixed;
     margin-bottom: 5rem;
+    border-radius:6px;
 }
 
 .leaderboard th {
     background: var(--accent-primary);
+    padding: 15px;
+    cursor: default;
 }
+
+.leaderboard th:first-child {
+    border-radius: 0.5rem 0 0 0;
+}
+
+.leaderboard th:last-child {
+    border-radius: 0 0.5rem 0 0;
+}
+
 
 .leaderboard .helmet {
     width: 5rem;
@@ -302,6 +314,14 @@ h2 {
 
 .leaderboard tr:hover td {
     background: var(--secondary);
+}
+
+.leaderboard tr:last-child td:last-child {
+    border-radius: 0 0 0.5rem 0;
+}
+
+.leaderboard tr:last-child td:first-child {
+    border-radius: 0 0 0 0.5rem;
 }
 
 .table-root td {
@@ -498,6 +518,15 @@ input[type=number]::-webkit-inner-spin-button {
 
 .driver-laps-table th {
     min-width: 4rem;
+    padding: 0.5rem;
+}
+
+.driver-laps-table th:first-child{
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.driver-laps-table th:last-child{
+    border-radius: 0 0.5rem 0.5rem 0;
 }
 
 .driver-laps-table i {
