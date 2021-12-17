@@ -401,8 +401,14 @@ h2 {
 }
 
 /* hide up and down arrows from number input fields */
-input[type=number]::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 .popup-modal {

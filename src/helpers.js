@@ -141,7 +141,7 @@ function setEventListenersValidation() {
             return;
         }
         checkInputFieldLength(minutes, 1);
-
+        preventNonNumericInput(e);
     })
 
     minutes.addEventListener("keyup", () => {
@@ -153,8 +153,8 @@ function setEventListenersValidation() {
         if (e.keyCode === 9) {
             return;
         }
-        // prevent user from entering non-numeric characters
         checkInputFieldLength(seconds, 2);
+        preventNonNumericInput(e);
     })
 
     seconds.addEventListener("keyup", (e) => {
@@ -173,6 +173,7 @@ function setEventListenersValidation() {
         }
         // prevent user from entering non-numeric characters
         checkInputFieldLength(fractions, 3);
+        preventNonNumericInput(e);
     })
 
     fractions.addEventListener("keyup", () => {
@@ -756,17 +757,22 @@ function handleEditLapTimeModal(rowCells, lap, editIcon) {
         updateLapTime(updatedLap, leaderboardTableRoot);
         displayDataModalTable();
     }
-    rowCells.lapTimeCell.addEventListener("keyup", () => {
+    rowCells.lapTimeCell.addEventListener("keyup", (e) => {
         // must match the regex for lap time (ex: 0:00:000)
         if (rowCells.lapTimeCell.innerText.match(/^[0-9]:[0-5][0-9]:[0-9]{3}$/)) {
             rowCells.lapTimeCell.classList.remove('invalid-lap-time-modal');
             if (rowCells.tyreCell.innerText.match(/^[S|M|H|I|W]{1}$/)){
                 editIcon.classList.add("isVisible");
             }
-
         } else {
             rowCells.lapTimeCell.classList.add('invalid-lap-time-modal');
             editIcon.classList.remove("isVisible");
+        }
+    })
+
+    rowCells.lapTimeCell.addEventListener("keydown", (e) => {
+        if (e.key === "Enter"){
+            e.preventDefault();
         }
     })
 
@@ -781,6 +787,12 @@ function handleEditLapTimeModal(rowCells, lap, editIcon) {
         } else {
             rowCells.tyreCell.classList.add('invalid-tyre-modal');
             editIcon.classList.remove("isVisible");
+        }
+    })
+
+    rowCells.tyreCell.addEventListener("keydown", (e) => {
+        if (e.key === "Enter"){
+            e.preventDefault();
         }
     })
 }
@@ -946,8 +958,6 @@ function displayEvents() {
     });
 }
 
-
-
 // padStart not working with spaces??
 function leftPad(string, fillChar, amount) {
     return amount - string.length > 0 ? fillChar.repeat(amount - string.length) + string : string;
@@ -962,5 +972,13 @@ function fetchAllLapIds(lapTimes) {
         return a - b;
     });
     return lapIds;
+}
+
+function preventNonNumericInput(e) {
+    if (e.keyCode < 48 || e.keyCode > 57) {
+        if (!(e.keyCode === 8)){
+            e.preventDefault();
+        }
+    }
 }
 
