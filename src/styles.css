@@ -65,6 +65,33 @@ h2 {
     font-size: 1.5rem;
 }
 
+
+.event {
+    width: 50%;
+    margin: 2rem auto;
+    border: 2px solid var(--accent-primary);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 200;
+    overflow: hidden;
+
+}
+
+.event:hover {
+    cursor: pointer;
+    background: var(--secondary);
+    transition: background 0.3s ease;
+    box-shadow: 0 0 6px 0 var(--accent-secondary);
+}
+
+.event h3, .event p{;
+    color: var(--text);
+    margin: 0;
+    background: none;
+}
+
 .fa-chevron-left {
     position: absolute;
     top: 1.5rem;
@@ -76,7 +103,7 @@ h2 {
 
 .fa-chevron-left:hover {
     color: var(--accent-secondary);
-   filter: drop-shadow(0 0 5px var(--accent-secondary));
+    filter: drop-shadow(0 0 5px var(--accent-secondary));
 }
 
 .delete-event {
@@ -91,7 +118,7 @@ h2 {
 
 .delete-event:hover {
     color: var(--accent-secondary);
-   filter: drop-shadow(0 0 5px var(--accent-secondary));
+    filter: drop-shadow(0 0 5px var(--accent-secondary));
 }
 
 .helmet-img {
@@ -280,7 +307,6 @@ h2 {
     border-radius: 0 0.5rem 0 0;
 }
 
-
 .leaderboard .helmet {
     width: 5rem;
 }
@@ -328,32 +354,6 @@ h2 {
     height: 4rem;
 }
 
-.event {
-    width: 50%;
-    margin: 2rem auto;
-    border: 2px solid var(--accent-primary);
-    border-radius: 0.5rem;
-    padding: 2rem;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    z-index: 200;
-    overflow: hidden;
-
-}
-
-.event:hover {
-    cursor: pointer;
-    background: var(--secondary);
-    transition: background 0.3s ease;
-    box-shadow: 0 0 6px 0 var(--accent-secondary);
-}
-
-.event h3, .event p{;
-    color: var(--text);
-    margin: 0;
-    background: none;
-}
-
 .titleContainer {
     position: relative;
 }
@@ -361,7 +361,6 @@ h2 {
 .title {
     padding: 1rem;
 }
-
 
 .edit-title, .save-title {
     position: absolute;
@@ -401,7 +400,7 @@ h2 {
     position: relative;
 }
 
-/* hide up and down arrows from */
+/* hide up and down arrows from number input fields */
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
@@ -546,7 +545,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 .fa-edit:hover, .fa-check:hover, .fa-trash-alt:hover {
     color: var(--accent-primary);
-    filter: drop-shadow(0 0 5px var(--accent-primary));
+    filter: drop-shadow(0 0 5px var(--accent-secondary));
 }
 
 .fa-sort {
@@ -698,30 +697,138 @@ input[type=number]::-webkit-inner-spin-button {
 
 }
 
+@media only screen and (max-width: 1300px) {
+    main {
+        width: 90%;
+    }
+}
 
-/*.minutes-invalid::after{*/
-/*    content: "Entrez un nombre de minutes entre 0 et 9";*/
-/*}*/
+@media only screen and (max-width: 1000px) {
+    main {
+        width: 90%;
+    }
 
-/*.seconds-invalid::after{*/
-/*    content: "Entrez un nombre de minutes entre 0 et 59";*/
-/*}*/
+    .times-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
 
-/*.fractions-invalid::after{*/
-/*    content: "Entrez un nombre de minutes entre 0 et 999";*/
-/*}*/
+    .minutesContainer, .secondsContainer, .fractionsContainer, .tyresContainer {
+        justify-content: space-between;
+        width: 40%;
+    }
 
-/*.tooltip-invalid:before {*/
-/*    content:"";*/
-/*    position: absolute;*/
-/*    top: 3.8rem;*/
-/*    left: 0;*/
-/*    width: 100%;*/
-/*    height: 2px;*/
-/*    background: var(--text);*/
-/*    z-index: 20;*/
-/*}*/
+    /*.minutesContainer input::placeholder, .secondsContainer input::placeholder, .fractionsContainer input::placeholder, .tyresContainer input::placeholder{*/
+    /*    text-align: center;*/
+    /*}*/
 
-/*.tooltip-invalid input:focus-visible {*/
-/*    border: 2px solid var(--text);*/
-/*}*/
+    .helmet {
+        display: none;
+    }
+
+    .team {
+        display: none;
+    }
+
+    .table-root td:nth-child(2), .table-root td:nth-child(5){
+        display: none;
+    }
+
+    .driver-modal {
+        width: 90%;
+    }
+
+    .fa-sort {
+        right: 0;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    main {
+        width: 100%;
+    }
+
+    .minutesContainer, .secondsContainer, .fractionsContainer, .tyresContainer {
+        width: 70%;
+    }
+
+    #tracks, .drivers {
+        width: 80%;
+    }
+
+    .edit-track, .save-track {
+        left: 90%;
+    }
+
+    .fa-sort {
+        display: none;
+    }
+
+    .popup-modal-content {
+        width: 100%;
+    }
+
+    .driver-laps-table {
+        width: 95%;
+    }
+
+    .table-root td:nth-child(8), .table-root td:nth-child(9), .leaderboard th:nth-child(8), .leaderboard th:nth-child(9) {
+        display: none;
+    }
+
+    .leaderboard th:nth-child(7){
+        border-radius: 0 0.5rem 0 0;
+    }
+
+    * {
+        font-size: 0.8rem;
+    }
+
+
+
+}
+
+@media only screen and (max-width: 450px) {
+
+    .delete-event {
+        right: 50%;
+        top: 1.5rem;
+        z-index: 10;
+        transform: translate(50%, -50%);
+    }
+
+    h1 {
+        margin-top: 3rem;
+    }
+
+    .edit-title {
+        top: 4rem;
+    }
+
+    .fa-chevron-left {
+        top: 4rem;
+        left: 1rem;
+    }
+
+    .popup-modal-content {
+        width: 100%;
+    }
+
+    .driver-laps-table {
+        width: 100%;
+    }
+
+    th {
+        min-width: 2rem;
+    }
+
+    .event-body {
+        display: none;
+    }
+
+    .event-header {
+        margin: 0;
+    }
+}

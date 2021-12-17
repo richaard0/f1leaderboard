@@ -248,6 +248,17 @@ function getTeamImage(driverNumber) {
     return teamImage;
 }
 
+function getTrackImgUrl(trackName){
+    // find track name from tracks
+    let trackImg;
+    tracks.forEach((track) => {
+        if (track.name === trackName){
+            trackImg = track.image;
+        }
+    });
+    return trackImg;
+}
+
 function getDriversFromLaptimes(times) {
     const drivers = [];
     times.forEach(time => {
@@ -278,6 +289,18 @@ function getCurrentLapId() {
         }
     });
     return lapId;
+}
+
+function getNextId() {
+    const events = JSON.parse(localStorage.getItem("events"));
+    console.log(events);
+    let maxId = 0;
+    events.forEach((event) => {
+        if (event.id > maxId) {
+            maxId = event.id;
+        }
+    });
+    return maxId + 1;
 }
 
 function getAllLapTimesEvent(allLapTimes, eventId) {
@@ -808,7 +831,7 @@ function handleDeleteEvent(eventId) {
             allEvents.splice(allEvents.indexOf(event), 1);
         }
     })
-    // delete from all laps
+    // delete lap from all laps
     let allLapTimes = fetchAllLapTimes();
     allLapTimes = allLapTimes.filter(lap => {
         return lap.eventId !== eventId
@@ -880,8 +903,7 @@ function displayEvents() {
         let fastestEventLaps = getFastestLapsByDrivers(eventLapTimes);
         // get the top 3 lap times for the event
         let top3LapTimes = fastestEventLaps.sort((a, b) => {
-            return a.time.minutes * 60 + a.time.seconds + a.time.fractions / 100 - (b.time.minutes * 60 + b.time.seconds + b.time.fractions / 100)
-        }).slice(0, 3);
+            return a.time.minutes * 60 + a.time.seconds + a.time.fractions / 100 - (b.time.minutes * 60 + b.time.seconds + b.time.fractions / 100)}).slice(0, 3);
         // then display the top 3 lap times
         if (top3LapTimes.length > 0){
             ranking.innerText = "Ranking";
@@ -924,17 +946,7 @@ function displayEvents() {
     });
 }
 
-function getNextId() {
-    const events = JSON.parse(localStorage.getItem("events"));
-    console.log(events);
-    let maxId = 0;
-    events.forEach((event) => {
-        if (event.id > maxId) {
-            maxId = event.id;
-        }
-    });
-    return maxId + 1;
-}
+
 
 // padStart not working with spaces??
 function leftPad(string, fillChar, amount) {
@@ -952,13 +964,3 @@ function fetchAllLapIds(lapTimes) {
     return lapIds;
 }
 
-function getTrackImgUrl(trackName){
-    // find track name from tracks
-    let trackImg;
-    tracks.forEach((track) => {
-        if (track.name === trackName){
-            trackImg = track.image;
-        }
-    });
-    return trackImg;
-}

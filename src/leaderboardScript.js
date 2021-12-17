@@ -61,7 +61,6 @@ function initialize() {
         disableTrackSelectionField()
     }
     addButton.disabled = (minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
-    console.log((minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== ""));
 }
 
 function initializeFromLocalStorage() {
