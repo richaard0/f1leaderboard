@@ -30,7 +30,7 @@ createEvent.addEventListener("click", (e) => {
     localStorage.setItem("events", JSON.stringify(events));
     localStorage.setItem("currentEventId", currentEventId);
     localStorage.setItem("enterEventField", "");
-    clearFieldsValue();
+    // clearFieldsValue();
     window.location.href = "leaderboard.html";
 })
 
