@@ -141,6 +141,11 @@ function setEventListenersValidation() {
             return;
         }
         checkInputFieldLength(minutes, 1);
+
+    })
+
+    minutes.addEventListener("keyup", () => {
+        addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
     })
 
     seconds.addEventListener("keydown", (e) => {
@@ -158,6 +163,7 @@ function setEventListenersValidation() {
             return;
         }
         checkSeconds(seconds);
+        addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
     })
 
     fractions.addEventListener("keydown", (e) => {
@@ -167,6 +173,10 @@ function setEventListenersValidation() {
         }
         // prevent user from entering non-numeric characters
         checkInputFieldLength(fractions, 3);
+    })
+
+    fractions.addEventListener("keyup", () => {
+        addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
     })
 
     title.addEventListener("keyup", (e) => {
@@ -181,6 +191,10 @@ function setEventListenersValidation() {
             saveIcon.classList.add("isVisible");
         }
 
+    })
+
+    driversSelect.addEventListener("change", () => {
+        addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
     })
 }
 
@@ -571,6 +585,7 @@ function handleAddTime(event) {
     setAllLapTimesCurrentEvent(allLapTimesEvent);
     clearFieldsValue();
     updateLeaderboard(leaderboardTableRoot);
+    addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
 }
 
 
@@ -622,6 +637,10 @@ function displayDataModalTable() {
     lapsModalTableRoot.innerHTML = "";
 
     const driverLaps = fetchDriverLaps()
+    if (driverLaps.length === 0){
+        hideDriverModal();
+        return;
+    }
     const driverFastestLap = getFastestLap(driverLaps);
 
     // set modal table
@@ -852,7 +871,6 @@ function displayEvents() {
         let eventBody = document.createElement('div');
         eventBody.classList.add('event-body');
         let ranking = document.createElement("p");
-        ranking.innerText = "Ranking";
         eventBody.appendChild(ranking);
 
         // get all the lap times for this event
@@ -866,6 +884,9 @@ function displayEvents() {
             return a.time.minutes * 60 + a.time.seconds + a.time.fractions / 100 - (b.time.minutes * 60 + b.time.seconds + b.time.fractions / 100)
         }).slice(0, 3);
         // then display the top 3 lap times
+        if (top3LapTimes.length > 0){
+            ranking.innerText = "Ranking";
+        }
         for (let i = 0; i < top3LapTimes.length; i++) {
             const lap = top3LapTimes[i];
             let lapTime = document.createElement("p");

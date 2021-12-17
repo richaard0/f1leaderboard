@@ -60,6 +60,7 @@ function initialize() {
         tracksSelect.value = currentEvent.track;
         disableTrackSelectionField()
     }
+    addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
 }
 
 function initializeFromLocalStorage() {
