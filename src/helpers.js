@@ -494,6 +494,14 @@ function disableTrackSelectionField() {
 }
 
 function clearFieldsValue() {
+    if (!localStorage.getItem("fieldsValue")) {
+        localStorage.setItem("fieldsValue", JSON.stringify({
+            minutes: "",
+            seconds: "",
+            fractions: "",
+            tyres: "",
+        }));
+    }
     const fieldsString = localStorage.getItem("fieldsValue");
     const fields = JSON.parse(fieldsString);
     fields.minutes = "";
