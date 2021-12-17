@@ -854,7 +854,6 @@ function createDeleteIcon(lapId) {
 function displayEvents() {
     const events = JSON.parse(localStorage.getItem("events"));
     events.forEach((event) => {
-
         let eventDiv = document.createElement("div");
         eventDiv.classList.add("event");
         eventDiv.setAttribute("id", event.id);
@@ -904,6 +903,15 @@ function displayEvents() {
             })}`;
             eventBody.appendChild(lapTime);
         }
+
+        let trackSvg = document.createElement("img");
+        let trackImgUrl = getTrackImgUrl(event.track);
+        trackSvg.setAttribute("src", trackImgUrl);
+        trackSvg.setAttribute("alt", "track");
+        trackSvg.classList.add("track-img");
+        eventBody.appendChild(trackSvg);
+        console.log(trackImgUrl);
+
         eventDiv.appendChild(eventBody);
 
         eventDiv.addEventListener("click", (e) => {
@@ -942,4 +950,15 @@ function fetchAllLapIds(lapTimes) {
         return a - b;
     });
     return lapIds;
+}
+
+function getTrackImgUrl(trackName){
+    // find track name from tracks
+    let trackImg;
+    tracks.forEach((track) => {
+        if (track.name === trackName){
+            trackImg = track.image;
+        }
+    });
+    return trackImg;
 }
