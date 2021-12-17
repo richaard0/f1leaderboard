@@ -47,8 +47,6 @@ window.addEventListener("load", () => {
     initializeFromLocalStorage();
 });
 
-
-
 function initialize() {
     addTracksToSelect();
     addDriversToSelect();
@@ -60,7 +58,6 @@ function initialize() {
         tracksSelect.value = currentEvent.track;
         disableTrackSelectionField()
     }
-    addButton.disabled = (minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
 }
 
 function initializeFromLocalStorage() {
@@ -89,7 +86,7 @@ function initializeFromLocalStorage() {
 
     // set the fieldsValue to the form
     updateFields(fieldsValue);
-
+    addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
 }
 
 function addTracksToSelect(){
@@ -109,3 +106,5 @@ function addDriversToSelect(){
         driversSelect.appendChild(option);
     });
 }
+
+

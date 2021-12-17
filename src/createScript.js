@@ -5,10 +5,7 @@ const rootDiv = document.querySelector(".previous-results");
 let eventInputValue = "";
 let events = [];
 
-if (!localStorage.getItem("events")) {
-  localStorage.setItem("events", JSON.stringify(events));
-}
-events = JSON.parse(localStorage.getItem("events"));
+addInitialData();
 
 if (!localStorage.getItem("enterEventField")) {
   localStorage.setItem("enterEventField", JSON.stringify(""));

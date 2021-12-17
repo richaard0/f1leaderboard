@@ -384,6 +384,19 @@ function createModalRow() {
     }
 }
 
+function addInitialData(){
+    // check if localstorage is empty
+    if (!localStorage.getItem("events") && !localStorage.getItem("currentEventId") && !localStorage.getItem("allLapTimes")){
+        let allLapTimes = initialData.allLaptimes;
+        let event = initialData.event;
+        let events = [];
+        events.push(event);
+        setAllLapTimes(allLapTimes);
+        setAllEvents(events);
+
+    }
+}
+
 // ----------------------
 // CALCULATIONS FUNCTIONS
 // ----------------------

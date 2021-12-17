@@ -276,3 +276,68 @@ const tracks = [
         image: "./assets/tracks/zandvoort.svg"
     }
 ]
+
+const initialData = {
+    event : {
+        id: 1,
+        title: "Testing event",
+        date: "2020-01-01",
+    },
+    allLaptimes: [
+        {
+            id: 1,
+            driverNumber: 44,
+            time: {
+                minutes: 1,
+                seconds: 12,
+                fractions: 123
+            },
+            tyres: "S",
+            eventId: 1
+        },
+        {
+            id: 2,
+            driverNumber: 33,
+            time: {
+                minutes: 1,
+                seconds: 12,
+                fractions: 45,
+            },
+            tyres: "M",
+            eventId: 1
+        },
+        {
+            id: 3,
+            driverNumber: 14,
+            time: {
+                minutes: 1,
+                seconds: 13,
+                fractions: 678,
+            },
+            tyres: "S",
+            eventId: 1
+        },
+        {
+            id: 4,
+            driverNumber: 22,
+            time: {
+                minutes: 1,
+                seconds: 13,
+                fractions: 444,
+            },
+            tyres: "M",
+            eventId: 1
+        },
+        {
+            id: 5,
+            driverNumber: 3,
+            time: {
+                minutes: 1,
+                seconds: 14,
+                fractions: 555,
+            },
+            tyres: "H",
+            eventId: 1
+        }
+    ]
+}
