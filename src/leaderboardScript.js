@@ -38,9 +38,12 @@ const gapHeader = document.querySelector('.gap');
 let currentLapId = getCurrentLapId();
 let currentEvent = fetchCurrentEvent();
 
-
 // After initial load
 window.addEventListener("load", () => {
+    // if local storage is empty, redirect to index.html
+    if (!localStorage.getItem("currentEventId")) {
+        window.location.href = "index.html";
+    }
     setInitialLeaderboardTitle();
     updateLeaderboard(leaderboardTableRoot);
     initialize();
@@ -106,5 +109,4 @@ function addDriversToSelect(){
         driversSelect.appendChild(option);
     });
 }
-
 

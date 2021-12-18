@@ -197,6 +197,10 @@ function setEventListenersValidation() {
     driversSelect.addEventListener("change", () => {
         addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
     })
+
+    tyres.addEventListener("change", () => {
+        addButton.disabled = !(minutes.value !== "" && seconds.value !== "" && fractions.value !== "" && tyres.value !== "" && driversSelect.value !== "");
+    })
 }
 
 function setEventListenersModalTable() {
@@ -386,11 +390,19 @@ function createModalRow() {
 
 function addInitialData(){
     // check if localstorage is empty
-    if (!localStorage.getItem("events") && !localStorage.getItem("currentEventId") && !localStorage.getItem("allLapTimes")){
+    if ((JSON.parse(localStorage.getItem("events")).length === 0 && !localStorage.getItem("currentEventId")) && !localStorage.getItem("allLapTimes")){
         let allLapTimes = initialData.allLaptimes;
         let event = initialData.event;
         let events = [];
         events.push(event);
+        let fields = {
+            driversSelect: "44",
+            minutes: "",
+            seconds: "",
+            fractions: "",
+            tyre: "S",
+        }
+        localStorage.setItem("fieldsValue", JSON.stringify(fields))
         setAllLapTimes(allLapTimes);
         setAllEvents(events);
 
@@ -989,7 +1001,7 @@ function fetchAllLapIds(lapTimes) {
 
 function preventNonNumericInput(e) {
     if (e.keyCode < 48 || e.keyCode > 57) {
-        if (!(e.keyCode === 8)){
+        if (!(e.keyCode === 8) && (e.keyCode < 96 || e.keyCode > 105)) {
             e.preventDefault();
         }
     }

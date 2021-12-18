@@ -3,7 +3,7 @@ const eventInput = document.querySelector(".enter-event");
 const eventTitleContainer = document.querySelector(".event-title-container");
 const rootDiv = document.querySelector(".previous-results");
 let eventInputValue = "";
-let events = [];
+let events = fetchAllEvents();
 
 addInitialData();
 

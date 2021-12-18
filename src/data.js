@@ -281,6 +281,7 @@ const initialData = {
     event : {
         id: 1,
         title: "Testing event",
+        track: "Circuit de Barcelona-Catalunya",
         date: "2020-01-01",
     },
     allLaptimes: [
